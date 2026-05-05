@@ -1,4 +1,0 @@
-repository "Three Thieves/Three Thieves@6872820805690@cloud"
-  path "/"
-    br "/main"
-    co "/main"
