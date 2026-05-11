@@ -92,6 +92,20 @@ public class GridPlayerController : MonoBehaviour
         isOnCooldown = false;
     }
 
+    float GetWallPenalty(Vector3 pos)
+    {
+        float penalty = 0f;
+
+        float checkDistance = 1f; // koliko daleko gledamo
+
+        // provjeri 4 smjera
+        if (Physics.CheckSphere(pos + Vector3.forward, 0.4f, wallLayer)) penalty += 3;
+        if (Physics.CheckSphere(pos + Vector3.back, 0.4f, wallLayer)) penalty += 3;
+        if (Physics.CheckSphere(pos + Vector3.left, 0.4f, wallLayer)) penalty += 3;
+        if (Physics.CheckSphere(pos + Vector3.right, 0.4f, wallLayer)) penalty += 3;
+
+    return penalty;
+    }
     // ---------- A* PATHFINDING ----------
 
     List<Vector3> FindPath(Vector3 start, Vector3 target)
@@ -123,7 +137,7 @@ public class GridPlayerController : MonoBehaviour
                 if (closed.Contains(next)) continue;
                 if (IsWall(next)) continue;
 
-                float g = current.G + 1;
+                float g = current.G + 1 + GetWallPenalty(next);
 
                 Node existing = open.Find(n => n.pos == next);
 
