@@ -42,10 +42,13 @@ public class PlayerInteraction : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, maxInteractionDistance))
         {
-            // Provjeri ima li kliknuti objekt InteractableObject komponentu
             InteractableObject interactable = hit.collider.GetComponent<InteractableObject>();
 
-            if (interactable != null)
+                // Ako nije na kliknutom objektu, provjeri parenta
+                if (interactable == null)
+                interactable = hit.collider.GetComponentInParent<InteractableObject>();
+
+                if (interactable != null)
             {
                 Debug.Log($"Kliknuto na: {hit.collider.gameObject.name} ({interactable.interactionPrompt})");
                 interactable.Interact(apManager);
