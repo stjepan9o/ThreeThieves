@@ -36,6 +36,7 @@ public class VaultInteraction : MonoBehaviour
     {
         if (GameState.Instance.hasKeycard)
         {
+            Debug.Log("MISSION COMPLETE");
             GameState.Instance.CompleteMission();
             isOpening = true;
             if (missionCompleteUI != null)
