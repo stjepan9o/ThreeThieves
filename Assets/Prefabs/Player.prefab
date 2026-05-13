@@ -32,8 +32,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8149075232778611329}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4589203994109125608
@@ -135,65 +134,3 @@ MonoBehaviour:
   currentAP: 0
   apText: {fileID: 0}
   moveCost: 2
---- !u!1001 &8547249089040780650
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 9171236382819141112}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: b995c1b9784877640996c53a6dfc8869, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 17.592415
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: b995c1b9784877640996c53a6dfc8869, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.4716343
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: b995c1b9784877640996c53a6dfc8869, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1.4000001
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: b995c1b9784877640996c53a6dfc8869, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: b995c1b9784877640996c53a6dfc8869, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: b995c1b9784877640996c53a6dfc8869, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: b995c1b9784877640996c53a6dfc8869, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: b995c1b9784877640996c53a6dfc8869, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: b995c1b9784877640996c53a6dfc8869, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: b995c1b9784877640996c53a6dfc8869, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: b995c1b9784877640996c53a6dfc8869, type: 3}
-      propertyPath: m_Name
-      value: Muscle man - character model for game
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: b995c1b9784877640996c53a6dfc8869, type: 3}
---- !u!4 &8149075232778611329 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b995c1b9784877640996c53a6dfc8869, type: 3}
-  m_PrefabInstance: {fileID: 8547249089040780650}
-  m_PrefabAsset: {fileID: 0}
