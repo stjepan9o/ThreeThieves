@@ -7,10 +7,9 @@ public class Door : InteractableObject
     public float openAngle = 90f;
     public float openSpeed = 2f;
     public bool openInward = false;
-
     private bool isOpen = false;
     private bool isAnimating = false;
-
+    public GameObject doorMesh;
     void Start()
     {
         interactionPrompt = "Otvori vrata";
@@ -41,6 +40,7 @@ public class Door : InteractableObject
         }
 
         transform.rotation = endRotation;
+        gameObject.layer = LayerMask.NameToLayer("Default");
         isOpen = true;
         isAnimating = false;
         Debug.Log("Vrata su otvorena!");

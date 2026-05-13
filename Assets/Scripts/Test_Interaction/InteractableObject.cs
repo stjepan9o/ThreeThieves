@@ -9,24 +9,10 @@ public class InteractableObject : MonoBehaviour
     public int apCost = 1;                         // Koliko AP kosta interakcija
 
     // Ovu metodu poziva PlayerInteraction kad igrac klikne na objekt
-    public virtual void Interact(ActionPointManager apManager)
+    public void Interact()
     {
-        if (apManager == null)
-        {
-            Debug.LogWarning("ActionPointManager nije pronadjen!");
-            return;
-        }
-
-        if (!apManager.HasEnoughAP(apCost))
-        {
-            Debug.Log($"Nema dovoljno AP! Treba: {apCost}, Ima: {apManager.CurrentAP}");
-            return;
-        }
-
-        apManager.SpendAP(apCost);
         OnInteract();
     }
-
     // Override ovu metodu u nasljednicima (npr. Door.cs)
     protected virtual void OnInteract()
     {

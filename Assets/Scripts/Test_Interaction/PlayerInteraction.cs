@@ -51,7 +51,7 @@ public class PlayerInteraction : MonoBehaviour
                 if (interactable != null)
             {
                 Debug.Log($"Kliknuto na: {hit.collider.gameObject.name} ({interactable.interactionPrompt})");
-                interactable.Interact(apManager);
+                interactable.Interact();
             }
         }
     }
