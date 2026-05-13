@@ -1,48 +1,48 @@
 using UnityEngine;
+using System.Collections;
 
-// Dodaj ovu skriptu na Cube koji predstavlja vrata
-// Nasljeduje InteractableObject - automatski dobiva klik detekciju i AP provjeru
 public class Door : InteractableObject
 {
     [Header("Door Settings")]
-    public bool disappearOnOpen = true;   // true = nestanu, false = animacija otvaranja
-    public float openAngle = 90f;         // Kut rotacije ako koristis animaciju
+    public float openAngle = 90f;
+    public float openSpeed = 2f;
+    public bool openInward = false;
 
     private bool isOpen = false;
+    private bool isAnimating = false;
 
     void Start()
     {
-        interactionPrompt = "Razbij vrata";
-        apCost = 2; // Muscle Man trosi 2 AP za razbijanje vrata
+        interactionPrompt = "Otvori vrata";
+        apCost = 2;
     }
 
     protected override void OnInteract()
     {
-        if (isOpen)
-        {
-            Debug.Log("Vrata su vec otvorena!");
-            return;
-        }
-
-        isOpen = true;
-        Debug.Log($"{gameObject.name}: Vrata su razbijena!");
-
-        if (disappearOnOpen)
-        {
-            // Vrata nestaju
-            gameObject.SetActive(false);
-        }
-        else
-        {
-            // Vrata se otvaraju rotacijom
-            transform.Rotate(0f, openAngle, 0f);
-        }
+        if (isOpen || isAnimating) return;
+        Debug.Log($"{gameObject.name}: Vrata se otvaraju!");
+        StartCoroutine(OpenDoor());
     }
 
-    // Vizualni indikator u editoru - vrata su zelena kad su zatvorena
-    void OnDrawGizmos()
+    IEnumerator OpenDoor()
     {
-        Gizmos.color = isOpen ? Color.gray : Color.green;
-        Gizmos.DrawWireCube(transform.position, transform.localScale);
+        isAnimating = true;
+
+        float targetAngle = openInward ? -openAngle : openAngle;
+        Quaternion startRotation = transform.rotation;
+        Quaternion endRotation = startRotation * Quaternion.Euler(0f, targetAngle, 0f);
+
+        float t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime * openSpeed;
+            transform.rotation = Quaternion.Lerp(startRotation, endRotation, Mathf.Clamp01(t));
+            yield return null;
+        }
+
+        transform.rotation = endRotation;
+        isOpen = true;
+        isAnimating = false;
+        Debug.Log("Vrata su otvorena!");
     }
 }
