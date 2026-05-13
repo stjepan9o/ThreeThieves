@@ -9,6 +9,14 @@ public class VaultInteraction : MonoBehaviour
     private bool isOpening = false;
     private Quaternion targetRotation = Quaternion.Euler(-90f, -100f, 0f);
 
+    private void Start()
+    {
+        if (missionCompleteUI == null)
+            missionCompleteUI = GameObject.Find("MissionCompleteUI");
+        if (keycardWarningUI == null)
+            keycardWarningUI = GameObject.Find("KeycardWarning");
+    }
+
     private void Update()
     {
         if (isOpening && vaultDoor != null)
