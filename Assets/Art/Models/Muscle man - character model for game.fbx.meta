@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: b995c1b9784877640996c53a6dfc8869
+=======
+guid: b1bc7af0a9c9447688c0562542c55dbb
+>>>>>>> dada2a3 (feat: implemented assets for objects in Objectives scene, validation of opening vault in different cases, exported objects into prefabs)
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []

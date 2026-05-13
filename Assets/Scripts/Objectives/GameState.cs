@@ -20,12 +20,10 @@ public class GameState : MonoBehaviour
     public void PickupKeycard()
     {
         hasKeycard = true;
-        Debug.Log("Keycard pokupljena!");
     }
 
     public void CompleteMission()
     {
         missionComplete = true;
-        Debug.Log("Misija završena!");
     }
 }
