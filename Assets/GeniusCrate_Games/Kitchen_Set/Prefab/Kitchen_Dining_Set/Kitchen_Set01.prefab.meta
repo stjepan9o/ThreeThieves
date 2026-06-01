@@ -1,8 +1,7 @@
 fileFormatVersion: 2
-guid: 00de79604fa8c8d4b83a201af7a0769c
-NativeFormatImporter:
+guid: 02dcddde75c8a444883138bae5339322
+PrefabImporter:
   externalObjects: {}
-  mainObjectFileID: 2100000
   userData: 
   assetBundleName: 
   assetBundleVariant: 
@@ -11,5 +10,5 @@ AssetOrigin:
   productId: 263284
   packageName: Kitchen Set - Interior
   packageVersion: 1.0.0
-  assetPath: Assets/GeniusCrate_Games/Chair_sofa_set(interior)/Material/floor_mat.mat
+  assetPath: Assets/GeniusCrate_Games/Kitchen_Set/Prefab/Kitchen_Dining_Set/Kitchen_Set01.prefab
   uploadId: 616540
