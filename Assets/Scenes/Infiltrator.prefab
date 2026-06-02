@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3614201961827106503}
   - component: {fileID: 4569840358958423378}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Infiltrator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
