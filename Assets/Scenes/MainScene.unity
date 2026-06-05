@@ -11560,7 +11560,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3815547084708954170, guid: eed54a613be71b543a99e53a8e2914de, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.21352598
+      value: 0.21
       objectReference: {fileID: 0}
     - target: {fileID: 3815547084708954170, guid: eed54a613be71b543a99e53a8e2914de, type: 3}
       propertyPath: m_LocalRotation.w
@@ -25587,9 +25587,10 @@ GameObject:
   - component: {fileID: 2036973624}
   - component: {fileID: 2036973626}
   - component: {fileID: 2036973625}
+  - component: {fileID: 2036973628}
   m_Layer: 0
   m_Name: Infiltrator
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25696,6 +25697,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2036973628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036973622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf1d93a02065b462f83c433b5b800240, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InfiltratorAbill
+  isHidden: 0
 --- !u!1001 &2047314477
 PrefabInstance:
   m_ObjectHideFlags: 0
