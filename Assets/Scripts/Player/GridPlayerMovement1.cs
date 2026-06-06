@@ -144,7 +144,7 @@ public class GridPlayerController : MonoBehaviour
             Vector3 next = current;
             next.x += Mathf.Sign(target.x - current.x);
 
-            if (Physics.CheckSphere(next, 0.2f, wallLayer))
+           if (Physics.CheckSphere(next, 0.6f, wallLayer))
                 return path;
 
             current = next;
@@ -164,7 +164,7 @@ public class GridPlayerController : MonoBehaviour
             Vector3 next = current;
             next.z += Mathf.Sign(target.z - current.z);
 
-            if (Physics.CheckSphere(next, 0.2f, wallLayer))
+            if (Physics.CheckSphere(next, 0.6f, wallLayer))
                 return path;
 
             current = next;
