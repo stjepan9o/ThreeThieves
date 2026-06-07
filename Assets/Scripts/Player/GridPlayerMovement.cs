@@ -21,11 +21,13 @@ public class GridPlayerController : MonoBehaviour
     private List<Vector3> currentPath;
     private int pathIndex = 0;
 
+    // pocetni broj ap
     void Start()
     {
         currentAP = maxAP;
     }
 
+    // provjerava movement i input
     void Update()
     {
         if (isMoving)
@@ -44,6 +46,7 @@ public class GridPlayerController : MonoBehaviour
         }
     }
 
+    // rovjerava klik za movement/interakciju
     void TryMove()
     {
         if (currentAP < moveCost)
@@ -54,7 +57,7 @@ public class GridPlayerController : MonoBehaviour
         if (!Physics.Raycast(ray, out RaycastHit hit))
             return;
 
-        // INTERACTION
+        // interaction
         InteractableObject interactable =
             hit.collider.GetComponentInParent<InteractableObject>();
 
@@ -69,7 +72,7 @@ public class GridPlayerController : MonoBehaviour
             return;
         }
 
-        // MOVEMENT
+        // movement
         Vector3 target = Snap(hit.point);
         Vector3 start = Snap(transform.position);
 
@@ -90,6 +93,7 @@ public class GridPlayerController : MonoBehaviour
         currentAP -= moveCost;
     }
 
+    // movement igraca po pathu
     void MoveAlongPath()
     {
         if (pathIndex >= currentPath.Count)
@@ -116,6 +120,7 @@ public class GridPlayerController : MonoBehaviour
         }
     }
 
+    // delay 1s nakon turna
     IEnumerator NextTurn()
     {
         isOnCooldown = true;
@@ -127,7 +132,7 @@ public class GridPlayerController : MonoBehaviour
         isOnCooldown = false;
     }
 
-    // SIMPLE GRID PATH
+    // grid path
     List<Vector3> FindSimplePath(Vector3 start, Vector3 target)
 {
     List<Vector3> path = new List<Vector3>();
@@ -147,7 +152,7 @@ public class GridPlayerController : MonoBehaviour
         Vector3 next = current;
         next.x += Mathf.Sign(target.x - current.x);
 
-        // STOP AKO JE WALL
+        // wall detection
         if (Physics.CheckSphere(next, 0.2f, wallLayer))
             return path;
 
@@ -171,7 +176,7 @@ public class GridPlayerController : MonoBehaviour
         Vector3 next = current;
         next.z += Mathf.Sign(target.z - current.z);
 
-        // STOP AKO JE WALL
+        // wall detection
         if (Physics.CheckSphere(next, 0.2f, wallLayer))
             return path;
 
@@ -187,6 +192,7 @@ public class GridPlayerController : MonoBehaviour
     return path;
 }
 
+// world position u grid position
 Vector3 Snap(Vector3 pos)
 {
     return new Vector3(

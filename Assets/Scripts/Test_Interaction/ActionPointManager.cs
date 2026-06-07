@@ -1,6 +1,5 @@
 using UnityEngine;
 
-// Postavi ovu skriptu na prazan GameObject koji ces nazvati "GameManager"
 // Upravlja Action Pointima tima
 public class ActionPointManager : MonoBehaviour
 {
