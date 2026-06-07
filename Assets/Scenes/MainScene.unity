@@ -1277,6 +1277,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7446012705540920303, guid: 9eebe5ce90b92664199b9b4a8f3610b5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12298,98 +12302,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5ed6b9e1bde769f4ebffc1f57976de2a, type: 3}
---- !u!1 &594040551
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 594040554}
-  - component: {fileID: 594040553}
-  - component: {fileID: 594040552}
-  m_Layer: 0
-  m_Name: Main Camera
-  m_TagString: MainCamera
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!81 &594040552
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 594040551}
-  m_Enabled: 1
---- !u!20 &594040553
-Camera:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 594040551}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
-  m_Iso: 200
-  m_ShutterSpeed: 0.005
-  m_Aperture: 16
-  m_FocusDistance: 10
-  m_FocalLength: 50
-  m_BladeCount: 5
-  m_Curvature: {x: 2, y: 11}
-  m_BarrelClipping: 0.25
-  m_Anamorphism: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 0
-  orthographic size: 5
-  m_Depth: -1
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
---- !u!4 &594040554
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 594040551}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 10, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &595069454
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22353,6 +22265,8 @@ GameObject:
   - component: {fileID: 1163321620}
   - component: {fileID: 1163321619}
   - component: {fileID: 1163321621}
+  - component: {fileID: 1163321623}
+  - component: {fileID: 1163321622}
   m_Layer: 7
   m_Name: Hacker
   m_TagString: Untagged
@@ -22372,12 +22286,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88da82e8f5b378f4b8682fa9b8eb5cd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridPlayerController
-  moveSpeed: 5
   maxTilesPerTurn: 5
   moveCost: 2
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 0
   apManager: {fileID: 1527304769}
   apText: {fileID: 0}
   canMove: 0
@@ -22410,6 +22320,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HackerCameraController
   mainCamera: {fileID: 1601642127}
   cameraDisplayText: {fileID: 601107779}
+--- !u!114 &1163321622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1163321618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28acd92f5107fe348a68831ab5948781, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridPlayerController
+  maxTilesPerTurn: 5
+  moveCost: 2
+  apManager: {fileID: 0}
+  apText: {fileID: 0}
+  canMove: 0
+--- !u!114 &1163321623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1163321618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478a20a27723f694c907df6270affd44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitGridMovement
+  moveSpeed: 5
+  rotationSpeed: 10
+  waypointTolerance: 0.05
 --- !u!1 &1165429909
 GameObject:
   m_ObjectHideFlags: 0
@@ -24627,6 +24569,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 3435851476978253120, guid: 7243a87e43b5e1c4d9af6b79ad67a1cf, type: 3}
+      propertyPath: missionComplete
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -24637,6 +24583,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7355371913312852362, guid: 7243a87e43b5e1c4d9af6b79ad67a1cf, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1527304770}
+    - targetCorrespondingSourceObject: {fileID: 7355371913312852362, guid: 7243a87e43b5e1c4d9af6b79ad67a1cf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1527304774}
+    - targetCorrespondingSourceObject: {fileID: 7355371913312852362, guid: 7243a87e43b5e1c4d9af6b79ad67a1cf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1527304773}
   m_SourcePrefab: {fileID: 100100000, guid: 7243a87e43b5e1c4d9af6b79ad67a1cf, type: 3}
 --- !u!1001 &1285345548
 PrefabInstance:
@@ -24940,10 +24892,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1306324598}
-  - component: {fileID: 1306324597}
   - component: {fileID: 1306324596}
   - component: {fileID: 1306324595}
   - component: {fileID: 1306324594}
+  - component: {fileID: 1306324600}
+  - component: {fileID: 1306324599}
   m_Layer: 0
   m_Name: Muscleman
   m_TagString: Untagged
@@ -25016,27 +24969,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1306324597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1306324593}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88da82e8f5b378f4b8682fa9b8eb5cd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GridPlayerController
-  moveSpeed: 5
-  maxTilesPerTurn: 15
-  moveCost: 2
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  apManager: {fileID: 1527304769}
-  apText: {fileID: 0}
-  canMove: 1
 --- !u!4 &1306324598
 Transform:
   m_ObjectHideFlags: 0
@@ -25053,6 +24985,38 @@ Transform:
   - {fileID: 197954598}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1306324599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306324593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28acd92f5107fe348a68831ab5948781, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridPlayerController
+  maxTilesPerTurn: 5
+  moveCost: 2
+  apManager: {fileID: 1527304769}
+  apText: {fileID: 0}
+  canMove: 1
+--- !u!114 &1306324600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306324593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478a20a27723f694c907df6270affd44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitGridMovement
+  moveSpeed: 5
+  rotationSpeed: 10
+  waypointTolerance: 0.05
 --- !u!1001 &1306352776
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28366,10 +28330,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a0b2f566cd433a49a8487c24580de28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterSwitcher
-  infiltrator: {fileID: 2036973624}
-  musclMan: {fileID: 1306324597}
-  hacker: {fileID: 1163321619}
+  infiltrator: {fileID: 2036973628}
+  musclMan: {fileID: 1306324599}
+  hacker: {fileID: 1163321622}
   cameraFollow: {fileID: 1601642125}
+--- !u!114 &1527304773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527304766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77b805c426270f14a8d9f8b5a2138a39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridManager
+  unwalkableMask:
+    serializedVersion: 2
+    m_Bits: 128
+  gridWorldSize: {x: 50, y: 50}
+  nodeRadius: 1
+  allowDiagonalMovement: 0
+  showGizmos: 1
+--- !u!114 &1527304774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527304766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b71ac7b1367eb54e9755e6ab42208c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Pathfinder
 --- !u!1 &1529562443 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6564334600451681658, guid: 0811362ae53573c47be253aac1dbdd5d, type: 3}
@@ -36325,9 +36320,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2036973623}
   - component: {fileID: 2036973627}
-  - component: {fileID: 2036973624}
   - component: {fileID: 2036973626}
   - component: {fileID: 2036973625}
+  - component: {fileID: 2036973629}
+  - component: {fileID: 2036973628}
   m_Layer: 0
   m_Name: Infiltrator
   m_TagString: Untagged
@@ -36351,27 +36347,6 @@ Transform:
   - {fileID: 1088288688}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2036973624
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2036973622}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88da82e8f5b378f4b8682fa9b8eb5cd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GridPlayerController
-  moveSpeed: 5
-  maxTilesPerTurn: 15
-  moveCost: 2
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  apManager: {fileID: 1527304769}
-  apText: {fileID: 0}
-  canMove: 1
 --- !u!54 &2036973625
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -36411,7 +36386,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 347e967df71232a43b1e3a99cbbf9b37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
-  apManager: {fileID: 0}
+  apManager: {fileID: 1527304769}
   maxInteractionDistance: 20
   interactableLayer:
     serializedVersion: 2
@@ -36437,6 +36412,38 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2036973628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036973622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28acd92f5107fe348a68831ab5948781, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridPlayerController
+  maxTilesPerTurn: 15
+  moveCost: 2
+  apManager: {fileID: 1527304769}
+  apText: {fileID: 0}
+  canMove: 1
+--- !u!114 &2036973629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036973622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478a20a27723f694c907df6270affd44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitGridMovement
+  moveSpeed: 5
+  rotationSpeed: 10
+  waypointTolerance: 0.05
 --- !u!1001 &2043922664
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38039,7 +38046,6 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 594040554}
   - {fileID: 482557632}
   - {fileID: 2120284759}
   - {fileID: 2036973623}
