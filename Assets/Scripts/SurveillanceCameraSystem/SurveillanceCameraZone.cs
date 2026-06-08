@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
+
 //TO DO: Define logic for alart meter cooldown for onTriggerExit or hide infiltrator ability in OnTriggerStary
 
 public class SurveillanceCameraZone : MonoBehaviour
@@ -11,7 +12,7 @@ public class SurveillanceCameraZone : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         InfiltratorAbility abilities = other.GetComponent<InfiltratorAbility>();
-        if (!abilities.isHidden == null) return;
+        if (abilities == null) return;
 
         if (!abilities.isHidden && alarmRoutine == null)
         {
@@ -23,6 +24,7 @@ public class SurveillanceCameraZone : MonoBehaviour
             StopCoroutine(alarmRoutine);
             alarmRoutine = null;
         }
+
 
     }
 
@@ -40,8 +42,8 @@ public class SurveillanceCameraZone : MonoBehaviour
     {
         while (true)
         {
-            AlarmSystem.Instance.IncreaseAlarm();
             yield return new WaitForSeconds(5f);
+            AlarmSystem.Instance.IncreaseAlarm();
         }
     }
 }
