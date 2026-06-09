@@ -1,9 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-
-//TO DO: Define logic for alart meter cooldown for onTriggerExit or hide infiltrator ability in OnTriggerStary
-
 public class SurveillanceCameraZone : MonoBehaviour
 {
     private Coroutine alarmRoutine;

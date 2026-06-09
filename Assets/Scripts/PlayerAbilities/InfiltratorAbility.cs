@@ -15,6 +15,10 @@ public class InfiltratorAbility : MonoBehaviour
 
     void Update()
     {
+        if (CharacterSwitcher.Instance == null ||
+            CharacterSwitcher.Instance.ActiveCharacterType != CharacterType.Infiltrator)
+            return;
+
         if (Input.GetKeyDown(KeyCode.H))
         {
             if (isHidden) DeactivateHide();

@@ -20,6 +20,12 @@ public class CharacterSwitcher : MonoBehaviour
     [Header("Camera")]
     public CameraFollow cameraFollow;
 
+    [Header("HUD")]
+    public PlayerIconsHUD playerIconsHUD;
+
+    [Header("HUD")]
+    public AbilitiesHUD abilitiesHUD;
+
     private GridPlayerController activeCharacter;
     public CharacterType ActiveCharacterType { get; private set; } = CharacterType.None;
 
@@ -65,6 +71,12 @@ public class CharacterSwitcher : MonoBehaviour
 
         if (cameraFollow != null)
             cameraFollow.target = character.transform;
+
+        if (playerIconsHUD != null)
+            playerIconsHUD.SetActivePlayer(type);
+
+        if (abilitiesHUD != null)
+            abilitiesHUD.SetActivePlayer(type);
 
         Debug.Log($"Aktivan lik: {character.gameObject.name} ({type})");
     }
