@@ -7,9 +7,14 @@ public class Door : InteractableObject
     public float openAngle = 90f;
     public float openSpeed = 2f;
     public bool openInward = false;
+
+    [Header("Character Restriction")]
+    public CharacterType requiredCharacter = CharacterType.None;
+
     private bool isOpen = false;
     private bool isAnimating = false;
     public GameObject doorMesh;
+
     void Start()
     {
         interactionPrompt = "Otvori vrata";
@@ -19,6 +24,25 @@ public class Door : InteractableObject
     protected override void OnInteract()
     {
         if (isOpen || isAnimating) return;
+
+        // Provjeri je li pravi lik aktivan
+        if (requiredCharacter != CharacterType.None)
+        {
+            if (CharacterSwitcher.Instance == null)
+            {
+                Debug.LogWarning("CharacterSwitcher nije pronadjen!");
+                return;
+            }
+
+            CharacterType activeType = CharacterSwitcher.Instance.ActiveCharacterType;
+
+            if (activeType != requiredCharacter)
+            {
+                Debug.Log($"Ova vrata moze otvoriti samo {requiredCharacter}! Trenutno aktivan: {activeType}");
+                return;
+            }
+        }
+
         Debug.Log($"{gameObject.name}: Vrata se otvaraju!");
         StartCoroutine(OpenDoor());
     }

@@ -1,63 +1,72 @@
 using UnityEngine;
 
-// Postavi ovu skriptu na GameManager objekt
-// Upravlja prebacivanjem između 3 lika
+public enum CharacterType
+{
+    None,
+    Infiltrator,
+    MuscleMan,
+    Hacker
+}
+
 public class CharacterSwitcher : MonoBehaviour
 {
+    public static CharacterSwitcher Instance { get; private set; }
+
     [Header("Characters")]
     public GridPlayerController infiltrator;  // Tipka 1
     public GridPlayerController musclMan;     // Tipka 2
     public GridPlayerController hacker;       // Tipka 3 - ne moze se kretati
 
     [Header("Camera")]
-    public CameraFollow cameraFollow; // Povuci Main Camera ovdje
+    public CameraFollow cameraFollow;
 
     private GridPlayerController activeCharacter;
+    public CharacterType ActiveCharacterType { get; private set; } = CharacterType.None;
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
-        // Postavi Hacker da se ne moze kretati
         if (hacker != null)
             hacker.canMove = false;
 
-        // Auto-pronadji kameru ako nije assignana
         if (cameraFollow == null)
             cameraFollow = Camera.main.GetComponent<CameraFollow>();
 
-        // Pocni s Infiltratorom
-        SwitchTo(infiltrator);
+        SwitchTo(infiltrator, CharacterType.Infiltrator);
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            SwitchTo(infiltrator);
+            SwitchTo(infiltrator, CharacterType.Infiltrator);
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
-            SwitchTo(musclMan);
+            SwitchTo(musclMan, CharacterType.MuscleMan);
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
-            SwitchTo(hacker);
+            SwitchTo(hacker, CharacterType.Hacker);
     }
 
-    void SwitchTo(GridPlayerController character)
+    void SwitchTo(GridPlayerController character, CharacterType type)
     {
         if (character == null) return;
 
-        // Disable svi likovi
         if (infiltrator != null) infiltrator.enabled = false;
         if (musclMan != null) musclMan.enabled = false;
         if (hacker != null) hacker.enabled = false;
 
-        // Enable odabrani lik
         character.enabled = true;
         activeCharacter = character;
+        ActiveCharacterType = type;
 
-        // Kamera prati aktivnog lika
         if (cameraFollow != null)
             cameraFollow.target = character.transform;
 
-        Debug.Log($"Aktivan lik: {character.gameObject.name}");
+        Debug.Log($"Aktivan lik: {character.gameObject.name} ({type})");
     }
 
     public GridPlayerController GetActiveCharacter()
