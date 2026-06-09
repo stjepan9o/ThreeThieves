@@ -12,14 +12,14 @@ public class SurveillanceCameraZone : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         InfiltratorAbility abilities = other.GetComponent<InfiltratorAbility>();
-        if (abilities == null) return;
+        bool isHidden = abilities != null && abilities.isHidden;
 
-        if (!abilities.isHidden && alarmRoutine == null)
+        if (!isHidden && alarmRoutine == null)
         {
             alarmRoutine = StartCoroutine(AlarmTick());
         }
 
-        if (abilities.isHidden && alarmRoutine != null)
+        else if (isHidden && alarmRoutine != null)
         {
             StopCoroutine(alarmRoutine);
             alarmRoutine = null;
