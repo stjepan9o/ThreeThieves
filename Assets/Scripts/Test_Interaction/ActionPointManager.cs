@@ -19,6 +19,15 @@ public class ActionPointManager : MonoBehaviour
     {
         OnAPChanged?.Invoke(CurrentAP);
         Debug.Log($"Potez poceo! AP: {CurrentAP}/{maxAP}");
+
+        // [DODANO] Kad TurnManager signalizira novi player potez, resetiraj AP
+        TurnManager.OnPlayerTurnStart += ResetAP;
+    }
+
+    // [DODANO] Odjava od eventa kad se objekt unisti
+    void OnDestroy()
+    {
+        TurnManager.OnPlayerTurnStart -= ResetAP;
     }
 
     public bool HasEnoughAP(int cost)
@@ -32,6 +41,10 @@ public class ActionPointManager : MonoBehaviour
         CurrentAP = Mathf.Max(0, CurrentAP); // Ne moze ici ispod 0
         OnAPChanged?.Invoke(CurrentAP);
         Debug.Log($"Potroseno {amount} AP. Preostalo: {CurrentAP}/{maxAP}");
+
+        // [DODANO] Kad AP padne na 0, automatski zavrsi player potez
+        if (CurrentAP == 0)
+            TurnManager.Instance?.EndPlayerTurn();
     }
 
     // Resetiraj AP na pocetku novog poteza
@@ -42,12 +55,10 @@ public class ActionPointManager : MonoBehaviour
         Debug.Log($"Novi potez! AP resetiran na {maxAP}");
     }
 
-    // Tipka E za reset AP (za testiranje)
+    // [IZMIJENJENO] E vise ne resetira AP direktno - zavrsi potez, TurnManager ce resetirati AP
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
-        {
-            ResetAP();
-        }
+            TurnManager.Instance?.EndPlayerTurn();
     }
 }

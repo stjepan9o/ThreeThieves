@@ -149,6 +149,13 @@ public class GridManager : MonoBehaviour
 
     public int MaxSize => gridSizeX * gridSizeY;
 
+    /// <summary>Ponovo skenira cijelu mapu - pozovi nakon sto se vrata otvore ili promijeni okolina.</summary>
+    public void RebuildGrid()
+    {
+        Physics.SyncTransforms(); // forsiraj fiziku da registrira ugaseni collider PRIJE skeniranja
+        Debug.Log("Grid se rebuilduje!");
+        CreateGrid();
+    }
     void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;

@@ -1,25 +1,11 @@
 using UnityEngine;
 using System.Collections;
-using TMPro;
 using System.Collections.Generic;
+using TMPro;
 
 /// <summary>
-/// Refaktorirana verzija tvog GridPlayerControllera. Razlike u odnosu na original:
-///
-/// 1) Pathfinding vise NIJE rucni "prvo X pa Z" hod uz Physics.CheckSphere po koraku -
-///    sada se trazi pravi A* put preko Pathfinder.Instance.FindPath(). To znaci da igrac
-///    moze obici prepreke, a ne samo da se kretanje "zaglavi" cim naleti na zid.
-/// 2) Samo izvrsavanje kretanja je izdvojeno u UnitGridMovement - identicna komponenta
-///    koju ce koristiti i guardovi. Ovaj skript sad SAMO odlucuje KAMO ici (na temelju
-///    mis klika) i koliko AP to kosta - ne zna nista o tome KAKO se hoda.
-/// 3) "NextTurn" je preimenovan u "Cooldown" da se ne pomijesa sa stvarnim turn-based
-///    sustavom (player turn / AI turn) koji ce vjerojatno biti zaseban manager.
-///
-/// Setup u Unity:
-/// - Stavi UnitGridMovement komponentu na isti GameObject (RequireComponent to osigurava).
-/// - GridManager i Pathfinder moraju postojati negdje u sceni (singletoni).
-/// - moveSpeed/wallLayer su se preselili - moveSpeed je sad na UnitGridMovement,
-///   wallLayer (sada "unwalkableMask") je na GridManageru.
+/// Kontrolira player input za kretanje i interakciju jednog lika-lopova.
+/// Blokira input za vrijeme guard poteza (TurnManager.IsPlayerTurn = false).
 /// </summary>
 [RequireComponent(typeof(UnitGridMovement))]
 public class GridPlayerController : MonoBehaviour
@@ -29,7 +15,7 @@ public class GridPlayerController : MonoBehaviour
     public int moveCost = 2;
 
     [Header("References")]
-    public ActionPointManager apManager; // Dijeljeni AP za cijeli tim
+    public ActionPointManager apManager;
     public TMP_Text apText;
 
     [Header("Character Settings")]
@@ -61,6 +47,9 @@ public class GridPlayerController : MonoBehaviour
     {
         if (!enabled) return;
 
+        // Blokiraj input za vrijeme guard poteza
+        if (TurnManager.Instance != null && !TurnManager.Instance.IsPlayerTurn) return;
+
         if (Input.GetMouseButtonDown(0) && !movement.IsMoving && !isOnCooldown)
             TryMove();
 
@@ -80,19 +69,19 @@ public class GridPlayerController : MonoBehaviour
         if (!Physics.Raycast(ray, out RaycastHit hit))
             return;
 
-        // INTERAKCIJA - klik na InteractableObject
+        // INTERAKCIJA
         InteractableObject interactable = hit.collider.GetComponent<InteractableObject>();
         if (interactable == null)
             interactable = hit.collider.GetComponentInParent<InteractableObject>();
 
         if (interactable != null)
         {
-            interactable.Interact(); // InteractableObject sam trosi svoj apCost
+            interactable.Interact();
             StartCoroutine(Cooldown());
             return;
         }
 
-        // KRETANJE - klik na pod
+        // KRETANJE
         if (!canMove)
         {
             Debug.Log("Ovaj lik ne moze hodati po mapi!");
@@ -102,21 +91,21 @@ public class GridPlayerController : MonoBehaviour
         List<Vector3> path = Pathfinder.Instance.FindPath(transform.position, hit.point);
 
         if (path == null || path.Count == 0)
-            return; // cilj nedostupan ili nema puta - ne trosimo AP
+            return;
 
         movement.SetPath(path, maxTilesPerTurn);
         apManager.SpendAP(moveCost);
     }
 
-    private void HandlePathComplete()
+    void HandlePathComplete()
     {
         StartCoroutine(Cooldown());
     }
 
-    private IEnumerator Cooldown()
+    IEnumerator Cooldown()
     {
         isOnCooldown = true;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         isOnCooldown = false;
     }
 }

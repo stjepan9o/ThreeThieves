@@ -42,6 +42,8 @@ public class Pathfinder : MonoBehaviour
         Node startNode = gridManager.NodeFromWorldPoint(startPos);
         Node targetNode = gridManager.NodeFromWorldPoint(targetPos);
 
+        Debug.Log($"Start walkable: {startNode.walkable}, Target walkable: {targetNode.walkable}");
+
         if (!targetNode.walkable)
             return new List<Vector3>();
 

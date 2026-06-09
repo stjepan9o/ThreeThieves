@@ -64,9 +64,17 @@ public class Door : InteractableObject
         }
 
         transform.rotation = endRotation;
-        gameObject.layer = LayerMask.NameToLayer("Default");
+
+        if (doorMesh != null)
+        {
+            doorMesh.layer = LayerMask.NameToLayer("Default");
+            Collider col = doorMesh.GetComponent<Collider>();
+            if (col != null) col.enabled = false;
+        }
+
+        GridManager.Instance?.RebuildGrid();
+
         isOpen = true;
         isAnimating = false;
-        Debug.Log("Vrata su otvorena!");
-    }
+        }
 }

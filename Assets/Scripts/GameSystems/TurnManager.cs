@@ -1,23 +1,41 @@
 using UnityEngine;
 using System;
+using System.Collections;
+
+public enum TurnState
+{
+    PlayerTurn,
+    GuardTurn
+}
 
 /// <summary>
-/// Centralni manager za izmjenu poteza player/AI.
-/// GridPlayerController poziva EndPlayerTurn() kad zavrsi akciju,
-/// a GuardController (i eventualni ostali AI entiteti) slusaju OnPlayerTurnEnd event.
+/// Upravlja izmjenom poteza player/guard.
 ///
-/// Postavljanje u Unity: dodaj na GameManager objekt (uz ostale managere).
-/// Folder: Game Systems
+/// Tok:
+/// 1) Player koristi AP (ili pritisne E)
+/// 2) EndPlayerTurn() -> stanje = GuardTurn -> OnGuardTurnStart event
+/// 3) Guardovi se pocnu micati po patrol ruti
+/// 4) Nakon guardTurnDuration sekundi -> stanje = PlayerTurn -> OnPlayerTurnStart event
+/// 5) ActionPointManager resetira AP, player moze ponovo igrati
+///
+/// Postavljanje: dodaj na GameManager objekt.
 /// </summary>
 public class TurnManager : MonoBehaviour
 {
     public static TurnManager Instance { get; private set; }
 
-    /// <summary>
-    /// Okida se kada igrac zavrsi svoju akciju (kretanje ili interakcija).
-    /// Svi GuardControlleri u sceni ce reagirati na ovaj event i napraviti svoj potez.
-    /// </summary>
-    public static event Action OnPlayerTurnEnd;
+    [Header("Turn Settings")]
+    [Tooltip("Koliko sekundi traje guard potez (koliko player ceka).")]
+    public float guardTurnDuration = 3f;
+
+    public TurnState CurrentState { get; private set; } = TurnState.PlayerTurn;
+    public bool IsPlayerTurn => CurrentState == TurnState.PlayerTurn;
+
+    /// <summary>Okida se kad pocinje player potez - ActionPointManager resetira AP.</summary>
+    public static event Action OnPlayerTurnStart;
+
+    /// <summary>Okida se kad pocinje guard potez - GuardController pocinje kretanje.</summary>
+    public static event Action OnGuardTurnStart;
 
     void Awake()
     {
@@ -30,12 +48,25 @@ public class TurnManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Poziva GridPlayerController po zavrsetku svake akcije.
-    /// Ne zovi vise puta po potezu - svaki poziv ce pokrenuti AI potez svih guardova.
+    /// Poziva ActionPointManager kad AP padne na 0 ili player pritisne E.
+    /// Ignorira poziv ako je vec guard potez u tijeku.
     /// </summary>
     public void EndPlayerTurn()
     {
-        Debug.Log("EndPlayerTurn pozvan, broj pretplatnika: " + (OnPlayerTurnEnd?.GetInvocationList().Length ?? 0));
-        OnPlayerTurnEnd?.Invoke();
+        if (CurrentState != TurnState.PlayerTurn) return;
+
+        CurrentState = TurnState.GuardTurn;
+        Debug.Log("--- GUARD POTEZ POCINJE ---");
+        OnGuardTurnStart?.Invoke();
+        StartCoroutine(GuardTurnRoutine());
+    }
+
+    IEnumerator GuardTurnRoutine()
+    {
+        yield return new WaitForSeconds(guardTurnDuration);
+
+        CurrentState = TurnState.PlayerTurn;
+        Debug.Log("--- PLAYER POTEZ POCINJE ---");
+        OnPlayerTurnStart?.Invoke();
     }
 }
