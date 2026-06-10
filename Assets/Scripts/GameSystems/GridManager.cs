@@ -88,7 +88,7 @@ public class GridManager : MonoBehaviour
                     + Vector3.right * (x * nodeDiameter + nodeRadius)
                     + Vector3.forward * (y * nodeDiameter + nodeRadius);
 
-                bool walkable = !Physics.CheckSphere(worldPoint, nodeRadius * 0.9f, unwalkableMask);
+                bool walkable = !Physics.CheckSphere(worldPoint, nodeRadius, unwalkableMask, QueryTriggerInteraction.Ignore);
                 grid[x, y] = new Node(walkable, worldPoint, x, y);
             }
         }
