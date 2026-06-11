@@ -1,14 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-/// <summary>
-/// A* pathfinding nad gridom iz GridManagera. Jedan zajednicki sustav koji koriste
-/// i player i guardovi - svatko samo zove FindPath(start, target) i dobije listu
-/// world-space waypointova koje UnitGridMovement onda prolazi.
-///
-/// Postavljanje u Unity: stavi ovu skriptu na isti GameObject kao GridManager (ili bilo koji
-/// drugi u sceni) - postoji samo jedna instanca (singleton), kao i GridManager.
-/// </summary>
 public class Pathfinder : MonoBehaviour
 {
     public static Pathfinder Instance { get; private set; }
@@ -30,10 +22,6 @@ public class Pathfinder : MonoBehaviour
         gridManager = GridManager.Instance;
     }
 
-    /// <summary>
-    /// Vraca listu world-pozicija (waypointova) od startPos do targetPos.
-    /// Ako put ne postoji (cilj nedostupan/zid), vraca praznu listu - provjeri path.Count == 0.
-    /// </summary>
     public List<Vector3> FindPath(Vector3 startPos, Vector3 targetPos)
     {
         if (gridManager == null)
@@ -47,8 +35,6 @@ public class Pathfinder : MonoBehaviour
         if (!targetNode.walkable)
             return new List<Vector3>();
 
-        // Bitno: Node objekti se reuse-aju izmedju poziva (grid se gradi samo jednom).
-        // startNode mora poceti sa cistim costovima, inace ce ostati "memorija" iz proslog FindPath poziva.
         startNode.gCost = 0;
         startNode.hCost = GetDistance(startNode, targetNode);
         startNode.parent = null;
@@ -59,7 +45,6 @@ public class Pathfinder : MonoBehaviour
 
         while (openSet.Count > 0)
         {
-            // Uzmi cvor s najmanjim fCost (kod jednakosti, manji hCost = blizi cilju)
             Node currentNode = openSet[0];
             for (int i = 1; i < openSet.Count; i++)
             {
@@ -96,7 +81,6 @@ public class Pathfinder : MonoBehaviour
             }
         }
 
-        // openSet prazan, a cilj nije pronadjen -> nema puta
         return new List<Vector3>();
     }
 
@@ -115,10 +99,6 @@ public class Pathfinder : MonoBehaviour
         return path;
     }
 
-    /// <summary>
-    /// Standardni A* "10/14" trik - cijeli brojevi umjesto floatova (10 = ravno, 14 = priblizno sqrt(2)*10 za dijagonalu).
-    /// Brze je i izbjegava floating point usporedbe.
-    /// </summary>
     private int GetDistance(Node a, Node b)
     {
         int dstX = Mathf.Abs(a.gridX - b.gridX);

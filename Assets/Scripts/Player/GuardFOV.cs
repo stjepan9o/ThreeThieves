@@ -7,18 +7,6 @@ public enum FOVState
     Suspicious, // Narancasto
     Alert       // Crveno
 }
-
-/// <summary>
-/// Field of View detekcija za guarda s runtime vizualizacijom (Line Renderer).
-///
-/// Postavljanje:
-/// 1) Dodaj GuardFOV na Guard_1 objekt.
-/// 2) Player likove (Infiltrator, MuscleMan, Hacker) postavi na "Player" layer.
-/// 3) Player Mask → "Player" layer, Obstacle Mask → "Wall" layer.
-/// 4) Fov Forward Offset → postavi na isti broj kao modelForwardOffset u UnitGridMovement
-///    (ispravlja bocni konus ako model nije orijentiran prema +Z).
-/// 5) Skripta automatski dodaje LineRenderer na Guard_1 - ne treba ga rucno dodavati.
-/// </summary>
 public class GuardFOV : MonoBehaviour
 {
     [Header("FOV Settings")]
@@ -44,7 +32,6 @@ public class GuardFOV : MonoBehaviour
 
     private LineRenderer coneRenderer;
 
-    // [DODANO] Alarm integracija
     private Coroutine alarmRoutine;
 
     void Awake()
@@ -54,7 +41,7 @@ public class GuardFOV : MonoBehaviour
 
     void Start()
     {
-        // [DODANO] Kad AlarmSystem dostigne Red → svi guardovi idu u Alert
+
         if (AlarmSystem.Instance != null)
             AlarmSystem.Instance.OnStateChanged += OnAlarmStateChanged;
     }
@@ -65,7 +52,6 @@ public class GuardFOV : MonoBehaviour
             AlarmSystem.Instance.OnStateChanged -= OnAlarmStateChanged;
     }
 
-    // [DODANO] Reagira na globalni alarm state
     void OnAlarmStateChanged(AlarmSystem.AlarmState state)
     {
         if (state == AlarmSystem.AlarmState.Red)
@@ -81,7 +67,7 @@ public class GuardFOV : MonoBehaviour
         coneRenderer.loop = true;
         coneRenderer.startWidth = 0.05f;
         coneRenderer.endWidth = 0.05f;
-        coneRenderer.positionCount = coneResolution + 2; // luk + 2 linije do vrha
+        coneRenderer.positionCount = coneResolution + 2; 
         coneRenderer.material = new Material(Shader.Find("Sprites/Default"));
         coneRenderer.sortingOrder = 1;
         UpdateConeColor();
@@ -95,7 +81,7 @@ public class GuardFOV : MonoBehaviour
 
     Vector3 GetForward()
     {
-        // Kompenzacija za modelForwardOffset - konus prati vizualni front modela
+
         return Quaternion.Euler(0f, fovForwardOffset, 0f) * transform.forward;
     }
 
@@ -129,10 +115,8 @@ public class GuardFOV : MonoBehaviour
         Vector3 origin = transform.position + Vector3.up * coneHeight;
         Vector3 forward = GetForward();
 
-        // Tocka 0 = vrh konusa (pozicija guarda)
         coneRenderer.SetPosition(0, origin);
 
-        // Tocke 1..coneResolution = luk od -angle/2 do +angle/2
         for (int i = 0; i < coneResolution; i++)
         {
             float t = (float)i / (coneResolution - 1);
@@ -141,7 +125,6 @@ public class GuardFOV : MonoBehaviour
             coneRenderer.SetPosition(i + 1, origin + dir * fovRange);
         }
 
-        // Zadnja tocka = natrag na vrh (zatvara konus)
         coneRenderer.SetPosition(coneResolution + 1, origin);
     }
 
@@ -153,7 +136,6 @@ public class GuardFOV : MonoBehaviour
         UpdateConeColor();
         Debug.Log($"{gameObject.name} FOV: {CurrentState}");
 
-        // [DODANO] Start/stop alarm tick ovisno o stanju - isti pattern kao SurveillanceCameraZone
         if (newState == FOVState.Suspicious && alarmRoutine == null)
             alarmRoutine = StartCoroutine(AlarmTick());
         else if (newState == FOVState.Unaware && alarmRoutine != null)
@@ -163,14 +145,12 @@ public class GuardFOV : MonoBehaviour
         }
     }
 
-    // [DODANO] Isti tick kao kamera zona - svake 5 sekundi puni alarm (ako player nije sakriven)
     private System.Collections.IEnumerator AlarmTick()
     {
         while (true)
         {
             yield return new WaitForSeconds(5f);
 
-            // Provjeri je li detektirani player sakriven (Infiltrator ability)
             if (DetectedPlayer != null)
             {
                 InfiltratorAbility abilities = DetectedPlayer.GetComponent<InfiltratorAbility>();
@@ -180,7 +160,6 @@ public class GuardFOV : MonoBehaviour
                     AlarmSystem.Instance?.IncreaseAlarm();
                 else
                 {
-                    // Player se sakrio - zaustavi alarm tick
                     alarmRoutine = null;
                     yield break;
                 }

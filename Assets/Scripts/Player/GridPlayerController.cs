@@ -3,10 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 
-/// <summary>
-/// Kontrolira player input za kretanje i interakciju jednog lika-lopova.
-/// Blokira input za vrijeme guard poteza (TurnManager.IsPlayerTurn = false).
-/// </summary>
 [RequireComponent(typeof(UnitGridMovement))]
 public class GridPlayerController : MonoBehaviour
 {
@@ -19,7 +15,7 @@ public class GridPlayerController : MonoBehaviour
     public TMP_Text apText;
 
     [Header("Character Settings")]
-    public bool canMove = true; // Hacker ima false, ostali true
+    public bool canMove = true; 
 
     private UnitGridMovement movement;
     private bool isOnCooldown = false;
@@ -47,7 +43,6 @@ public class GridPlayerController : MonoBehaviour
     {
         if (!enabled) return;
 
-        // Blokiraj input za vrijeme guard poteza
         if (TurnManager.Instance != null && !TurnManager.Instance.IsPlayerTurn) return;
 
         if (Input.GetMouseButtonDown(0) && !movement.IsMoving && !isOnCooldown)
@@ -69,7 +64,6 @@ public class GridPlayerController : MonoBehaviour
         if (!Physics.Raycast(ray, out RaycastHit hit))
             return;
 
-        // INTERAKCIJA
         InteractableObject interactable = hit.collider.GetComponent<InteractableObject>();
         if (interactable == null)
             interactable = hit.collider.GetComponentInParent<InteractableObject>();
@@ -81,7 +75,6 @@ public class GridPlayerController : MonoBehaviour
             return;
         }
 
-        // KRETANJE
         if (!canMove)
         {
             Debug.Log("Ovaj lik ne moze hodati po mapi!");

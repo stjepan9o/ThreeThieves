@@ -15,7 +15,7 @@ public class CharacterSwitcher : MonoBehaviour
     [Header("Characters")]
     public GridPlayerController infiltrator;  // Tipka 1
     public GridPlayerController musclMan;     // Tipka 2
-    public GridPlayerController hacker;       // Tipka 3 - ne moze se kretati
+    public GridPlayerController hacker;       // Tipka 3 
 
     [Header("Camera")]
     public CameraFollow cameraFollow;

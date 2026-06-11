@@ -13,11 +13,10 @@ public class HackerCameraController : MonoBehaviour
 
     void Start()
     {
-        // Sakrij tekst na početku
+        
         if (cameraDisplayText != null)
             cameraDisplayText.gameObject.SetActive(false);
 
-        // Pronađi sve security kamere
         GameObject[] cameraObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
         System.Collections.Generic.List<Camera> cameras = new System.Collections.Generic.List<Camera>();
         foreach (GameObject obj in cameraObjects)
@@ -41,18 +40,15 @@ public class HackerCameraController : MonoBehaviour
 
         Debug.Log($"Pronađeno {securityCameras.Length} kamera!");
 
-        // Isključi sve kamere na početku
         foreach (Camera cam in securityCameras)
             cam.enabled = false;
     }
 
     void Update()
     {
-        // Provjeri je li Hacker aktivan
         bool isHackerNow = CharacterSwitcher.Instance != null &&
                    CharacterSwitcher.Instance.ActiveCharacterType == CharacterType.Hacker;
 
-        // Kad se Hacker tek aktivira
         if (isHackerNow && !hackerActive)
         {
             hackerActive = true;
@@ -64,7 +60,6 @@ public class HackerCameraController : MonoBehaviour
 
             SetActiveCamera(currentCameraIndex);
         }
-        // Kad se Hacker deaktivira
         else if (!isHackerNow && hackerActive)
         {
             hackerActive = false;
@@ -78,7 +73,6 @@ public class HackerCameraController : MonoBehaviour
                 mainCamera.enabled = true;
         }
 
-        // Kontrole samo kad je Hacker aktivan
         if (!hackerActive || securityCameras.Length == 0) return;
 
         if (Input.GetKeyDown(KeyCode.RightArrow))

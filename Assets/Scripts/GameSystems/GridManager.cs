@@ -1,10 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-/// <summary>
-/// Jedan cvor (tile) grida. Cuva walkable status, world poziciju te A* cost vrijednosti.
-/// Reuse-a se izmedju razlicitih poziva FindPath (i za playera i za guardove).
-/// </summary>
 public class Node
 {
     public bool walkable;
@@ -27,17 +23,6 @@ public class Node
     public int fCost => gCost + hCost;
 }
 
-/// <summary>
-/// Generira i drzi grid podataka za cijelu mapu (jednom, na pocetku).
-/// Pathfinder ovaj grid koristi za A*, a sve jedinice (player + guardovi) dijele isti sustav -
-/// nema vise rucnog Physics.CheckSphere po koraku kretanja.
-///
-/// Postavljanje u Unity:
-/// 1) Stavi prazan GameObject "GridManager" na sredinu mape.
-/// 2) Postavi Grid World Size tako da pokrije cijelu mapu (X = sirina, Y = "dubina"/Z os).
-/// 3) Node Radius = pola velicine jedne tile-a (npr. 0.5 za tile od 1x1).
-/// 4) Unwalkable Mask = layer na kojem su zidovi/prepreke (isti layer kao stari wallLayer).
-/// </summary>
 public class GridManager : MonoBehaviour
 {
     public static GridManager Instance { get; private set; }
@@ -75,7 +60,6 @@ public class GridManager : MonoBehaviour
     {
         grid = new Node[gridSizeX, gridSizeY];
 
-        // Donji-lijevi kut grida - grid se siri simetricno oko transform.position GridManagera
         Vector3 worldBottomLeft = transform.position
             - Vector3.right * (gridWorldSize.x / 2f)
             - Vector3.forward * (gridWorldSize.y / 2f);
@@ -94,7 +78,6 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    /// <summary>Pretvara world poziciju (npr. raycast hit.point ili transform.position) u Node na gridu.</summary>
     public Node NodeFromWorldPoint(Vector3 worldPosition)
     {
         float percentX = (worldPosition.x - transform.position.x + gridWorldSize.x / 2f) / gridWorldSize.x;
@@ -109,7 +92,6 @@ public class GridManager : MonoBehaviour
         return grid[x, y];
     }
 
-    /// <summary>Vraca susjedne cvorove (4 ili 8 smjerova, ovisno o allowDiagonalMovement).</summary>
     public List<Node> GetNeighbours(Node node)
     {
         List<Node> neighbours = new List<Node>();
@@ -133,7 +115,6 @@ public class GridManager : MonoBehaviour
 
                 if (isDiagonal)
                 {
-                    // Sprijeci "rezanje uglova" - dijagonala je dozvoljena samo ako su obje susjedne strane prohodne
                     bool sideAClear = grid[node.gridX + x, node.gridY].walkable;
                     bool sideBClear = grid[node.gridX, node.gridY + y].walkable;
                     if (!sideAClear || !sideBClear)
@@ -149,10 +130,9 @@ public class GridManager : MonoBehaviour
 
     public int MaxSize => gridSizeX * gridSizeY;
 
-    /// <summary>Ponovo skenira cijelu mapu - pozovi nakon sto se vrata otvore ili promijeni okolina.</summary>
     public void RebuildGrid()
     {
-        Physics.SyncTransforms(); // forsiraj fiziku da registrira ugaseni collider PRIJE skeniranja
+        Physics.SyncTransforms(); 
         Debug.Log("Grid se rebuilduje!");
         CreateGrid();
     }

@@ -25,7 +25,6 @@ public class Door : InteractableObject
     {
         if (isOpen || isAnimating) return;
 
-        // Provjeri je li pravi lik aktivan
         if (requiredCharacter != CharacterType.None)
         {
             if (CharacterSwitcher.Instance == null)

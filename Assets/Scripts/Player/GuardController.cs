@@ -1,20 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-/// <summary>
-/// Kontrolira AI kretanje guarda po predefiniranoj patrol ruti.
-/// Reagira na TurnManager.OnGuardTurnStart - kad player zavrsi potez,
-/// guard se pomice do tilesPerTurn tile-ova prema sljedecem patrol pointu.
-///
-/// Postavljanje u Unity:
-/// 1) Dodaj ovu skriptu na Guard GameObject.
-///    UnitGridMovement ce se automatski zahtijevati.
-/// 2) U sceni kreiraj prazne GameObjecte kao waypointe
-///    (npr. "Guard1_Point1", "Guard1_Point2"...) i postavi ih na prohodni pod.
-/// 3) Povuci waypointe u Patrol Points array u Inspectoru, redom kojim
-///    zelis da guard patrolira. Guard ce rute prolaziti u krug.
-/// 4) Tiles Per Turn = koliko tile-ova guard prelazi po potezu (preporuka: 3-4).
-/// </summary>
 [RequireComponent(typeof(UnitGridMovement))]
 public class GuardController : MonoBehaviour
 {
