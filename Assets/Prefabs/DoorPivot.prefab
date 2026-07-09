@@ -162,5 +162,5 @@ MonoBehaviour:
   openAngle: 90
   openSpeed: 2
   openInward: 1
-  blocker: {fileID: 0}
+  requiredCharacter: 0
   doorMesh: {fileID: 0}

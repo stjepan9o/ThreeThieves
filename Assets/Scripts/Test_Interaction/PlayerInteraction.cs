@@ -1,16 +1,12 @@
 using UnityEngine;
-
-// Postavi ovu skriptu na Main Camera
-// Detektira klik misem na bilo koji InteractableObject u sceni
-// Ne koristi hardkodirane reference - radi genericko na kliknuti objekt!
 public class PlayerInteraction : MonoBehaviour
 {
     [Header("References")]
-    public ActionPointManager apManager; // Povuci GameManager objekt ovdje u Inspectoru
+    public ActionPointManager apManager; 
 
     [Header("Settings")]
-    public float maxInteractionDistance = 20f; // Maksimalna udaljenost interakcije
-    public LayerMask interactableLayer;         // Postavi na "Default" ili napravi novi layer
+    public float maxInteractionDistance = 20f; 
+    public LayerMask interactableLayer;       
 
     private Camera cam;
 
@@ -18,7 +14,6 @@ public class PlayerInteraction : MonoBehaviour
     {
         cam = Camera.main;
 
-        // Auto-pronadji ActionPointManager ako nije assignan
         if (apManager == null)
         {
             apManager = FindObjectOfType<ActionPointManager>();
@@ -29,7 +24,7 @@ public class PlayerInteraction : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) // Lijevi klik
+        if (Input.GetMouseButtonDown(0)) 
         {
             HandleClick();
         }
@@ -44,7 +39,7 @@ public class PlayerInteraction : MonoBehaviour
         {
             InteractableObject interactable = hit.collider.GetComponent<InteractableObject>();
 
-                // Ako nije na kliknutom objektu, provjeri parenta
+                
                 if (interactable == null)
                 interactable = hit.collider.GetComponentInParent<InteractableObject>();
 
@@ -56,7 +51,7 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    // Debug - prikazuje raycast u Scene viewu
+    
     void OnDrawGizmos()
     {
         if (cam == null) return;
