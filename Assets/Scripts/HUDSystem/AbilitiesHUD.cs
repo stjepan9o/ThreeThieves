@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,19 @@ public class AbilitiesHUD : MonoBehaviour
     [SerializeField] private Sprite infiltratorStay;
     [SerializeField] private Sprite muscleStay;
     [SerializeField] private Sprite hackerStay;
+
+    [Header("Ability selector flash")]
+    [SerializeField] private RectTransform selector;
+    [SerializeField] private Image flashIcon;
+    [SerializeField] private float flashDuration = 0.35f;
+
+    private Coroutine flashRoutine;
+
+    void Start()
+    {
+        if (selector != null)
+            selector.gameObject.SetActive(false);
+    }
 
     public void SetActivePlayer(CharacterType type)
     {
@@ -32,6 +46,34 @@ public class AbilitiesHUD : MonoBehaviour
                 stayIcon.sprite = hackerStay;
                 break;
         }
-        
+
+    }
+
+
+
+    public void FlashAbilityIcon(KeyCode key)
+    {
+        if (key == KeyCode.G && stayIcon != null)
+            Flash(stayIcon.rectTransform);
+        else if (key == KeyCode.H && flashIcon != null)
+            Flash(flashIcon.rectTransform);
+    }
+
+    private void Flash(RectTransform target)
+    {
+        if (selector == null || target == null) return;
+
+        selector.anchoredPosition = target.anchoredPosition;
+
+        if (flashRoutine != null) StopCoroutine(flashRoutine);
+        flashRoutine = StartCoroutine(FlashRoutine());
+    }
+
+    private IEnumerator FlashRoutine()
+    {
+        selector.gameObject.SetActive(true);
+        yield return new WaitForSeconds(flashDuration);
+        selector.gameObject.SetActive(false);
+        flashRoutine = null;
     }
 }

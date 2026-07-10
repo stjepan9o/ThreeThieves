@@ -15,7 +15,7 @@ public class GridPlayerController : MonoBehaviour
     public TMP_Text apText;
 
     [Header("Character Settings")]
-    public bool canMove = true; 
+    public bool canMove = true;
 
     private UnitGridMovement movement;
     private bool isOnCooldown = false;
@@ -51,20 +51,21 @@ void Update()
         if (Input.GetMouseButtonDown(0) && !movement.IsMoving && !isOnCooldown)
             TryMove();
 
-        if (apText != null && apManager != null)
-            apText.text = "AP: " + apManager.CurrentAP;
+
     }
 
     void TryMove()
     {
-        if (!apManager.HasEnoughAP(moveCost))
-        {
-            Debug.Log("Nema dovoljno AP za kretanje!");
-            return;
-        }
+
+        // if (!apManager.HasEnoughAP(moveCost))
+        // {
+        //     Debug.Log("Nema dovoljno AP za kretanje!");
+        //     return;
+        // }
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out RaycastHit hit))
+
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
             return;
 
         InteractableObject interactable = hit.collider.GetComponent<InteractableObject>();
@@ -99,7 +100,8 @@ void Update()
             return;
 
         movement.SetPath(path, maxTilesPerTurn);
-        apManager.SpendAP(moveCost);
+
+        // apManager.SpendAP(moveCost);
     }
 
     void HandlePathComplete()

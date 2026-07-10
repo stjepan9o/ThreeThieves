@@ -19,6 +19,11 @@ public class CharacterSwitcher : MonoBehaviour
 
     [Header("Camera")]
     public CameraFollow cameraFollow;
+    public FogOfWarEffect fogOfWar;
+
+    [Header("HUD")]
+    public PlayerIconsHUD playerIconsHUD;
+    public AbilitiesHUD abilitiesHUD;
 
     [Header("Lock")]
     [Tooltip("Hacker je zakljucan dok Infiltrator ne rijesi minigame na serveru.")]
@@ -39,6 +44,9 @@ public class CharacterSwitcher : MonoBehaviour
 
         if (cameraFollow == null)
             cameraFollow = Camera.main.GetComponent<CameraFollow>();
+
+        if (fogOfWar == null)
+            fogOfWar = Camera.main.GetComponent<FogOfWarEffect>();
 
         SwitchTo(infiltrator, CharacterType.Infiltrator);
     }
@@ -85,6 +93,15 @@ public class CharacterSwitcher : MonoBehaviour
 
         if (cameraFollow != null)
             cameraFollow.target = character.transform;
+
+        if (fogOfWar != null)
+            fogOfWar.SetActivePlayer(character.transform);
+
+        if (playerIconsHUD != null)
+            playerIconsHUD.SetActivePlayer(type);
+
+        if (abilitiesHUD != null)
+            abilitiesHUD.SetActivePlayer(type);
 
         Debug.Log($"Aktivan lik: {character.gameObject.name} ({type})");
     }

@@ -2,11 +2,11 @@ using UnityEngine;
 public class PlayerInteraction : MonoBehaviour
 {
     [Header("References")]
-    public ActionPointManager apManager; 
+    public ActionPointManager apManager;
 
     [Header("Settings")]
-    public float maxInteractionDistance = 20f; 
-    public LayerMask interactableLayer;       
+    public float maxInteractionDistance = 20f;
+    public LayerMask interactableLayer;
 
     private Camera cam;
 
@@ -24,7 +24,7 @@ public class PlayerInteraction : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) 
+        if (Input.GetMouseButtonDown(0))
         {
             HandleClick();
         }
@@ -35,15 +35,15 @@ public class PlayerInteraction : MonoBehaviour
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, maxInteractionDistance))
+        if (Physics.Raycast(ray, out hit, maxInteractionDistance, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
         {
             InteractableObject interactable = hit.collider.GetComponent<InteractableObject>();
 
-                
-                if (interactable == null)
+
+            if (interactable == null)
                 interactable = hit.collider.GetComponentInParent<InteractableObject>();
 
-                if (interactable != null)
+            if (interactable != null)
             {
                 Debug.Log($"Kliknuto na: {hit.collider.gameObject.name} ({interactable.interactionPrompt})");
                 interactable.Interact();
@@ -51,7 +51,7 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    
+
     void OnDrawGizmos()
     {
         if (cam == null) return;

@@ -8,6 +8,7 @@ public class ActionPointManager : MonoBehaviour
     public int CurrentAP { get; private set; }
 
     public event System.Action<int> OnAPChanged;
+    public event System.Action OnNotEnoughAP;
 
     void Awake()
     {
@@ -32,10 +33,16 @@ public class ActionPointManager : MonoBehaviour
         return CurrentAP >= cost;
     }
 
+
+    public void NotifyNotEnoughAP()
+    {
+        OnNotEnoughAP?.Invoke();
+    }
+
     public void SpendAP(int amount)
     {
         CurrentAP -= amount;
-        CurrentAP = Mathf.Max(0, CurrentAP); 
+        CurrentAP = Mathf.Max(0, CurrentAP);
         OnAPChanged?.Invoke(CurrentAP);
         Debug.Log($"Potroseno {amount} AP. Preostalo: {CurrentAP}/{maxAP}");
 
