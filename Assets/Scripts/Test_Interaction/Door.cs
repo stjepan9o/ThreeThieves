@@ -74,10 +74,19 @@ public class Door : InteractableObject
         }
 
         transform.rotation = endRotation;
+
+        // Oslobodi prolaz: ugasi SVE collidere vrata (ukljucujuci one na djeci,
+        // npr. DoorMesh). Mijenjanje layera samo na rootu ne pomaze ako je collider
+        // na childu - zato ovako. Otvorena vrata ne trebaju koliziju.
+        foreach (Collider col in GetComponentsInChildren<Collider>())
+            col.enabled = false;
+
         gameObject.layer = LayerMask.NameToLayer("Default");
         isOpen = true;
         isAnimating = false;
         Debug.Log("Vrata su otvorena!");
-        GridManager.Instance.RebuildGrid();
+
+        if (GridManager.Instance != null)
+            GridManager.Instance.RebuildGrid();
     }
 }

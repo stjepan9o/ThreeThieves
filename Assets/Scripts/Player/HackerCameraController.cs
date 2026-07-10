@@ -84,6 +84,7 @@ public class HackerCameraController : MonoBehaviour
 
         // Dok je keypad otvoren - ignoriraj prebacivanje kamera
         if (KeypadUI.IsKeypadOpen) return;
+        if (WireTaskManager.IsMinigameOpen) return;
 
         if (Input.GetKeyDown(KeyCode.RightArrow))
             SetActiveCamera((currentCameraIndex + 1) % securityCameras.Length);

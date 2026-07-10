@@ -44,6 +44,7 @@ void Update()
         if (!enabled) return;
 
         if (KeypadUI.IsKeypadOpen) return;
+        if (WireTaskManager.IsMinigameOpen) return;
 
         if (TurnManager.Instance != null && !TurnManager.Instance.IsPlayerTurn) return;
 
@@ -69,6 +70,15 @@ void Update()
         InteractableObject interactable = hit.collider.GetComponent<InteractableObject>();
         if (interactable == null)
             interactable = hit.collider.GetComponentInParent<InteractableObject>();
+
+        // --- PRIVREMENI DEBUG: makni nakon sto sredimo vrata ---
+        string parentChain = hit.collider.name;
+        Transform tp = hit.collider.transform.parent;
+        while (tp != null) { parentChain += " <- " + tp.name; tp = tp.parent; }
+        Debug.Log($"[CLICK] Pogodjeno: '{hit.collider.name}' (layer {LayerMask.LayerToName(hit.collider.gameObject.layer)}) | " +
+                  $"InteractableObject u parentima: {(interactable == null ? "NEMA" : interactable.gameObject.name)} | " +
+                  $"Lanac: {parentChain}");
+        // --- KRAJ DEBUG ---
 
         if (interactable != null)
         {
