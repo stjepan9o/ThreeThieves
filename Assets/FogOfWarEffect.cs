@@ -4,10 +4,11 @@ using UnityEngine;
 public class FogOfWarEffect : MonoBehaviour
 {
     public Shader fogShader;
-    public Transform player1;
-    public Transform player2;
     public float visionRadius = 8f;
     public float edgeSoftness = 2f;
+
+    [Header("Trenutno aktivan lik (postavlja se automatski)")]
+    public Transform activePlayer;
 
     Material mat;
     Camera cam;
@@ -19,20 +20,26 @@ public class FogOfWarEffect : MonoBehaviour
         mat = new Material(fogShader);
     }
 
-   void OnRenderImage(RenderTexture src, RenderTexture dst)
-{
-    Matrix4x4 gpuProj = GL.GetGPUProjectionMatrix(cam.projectionMatrix, false);
-    Matrix4x4 vp = gpuProj * cam.worldToCameraMatrix;
-    mat.SetMatrix("_InverseVP", vp.inverse);
+    public void SetActivePlayer(Transform player)
+    {
+        activePlayer = player;
+    }
 
-    mat.SetVector("_PlayerPos1", player1 ? player1.position : Vector3.one * 99999f);
-    mat.SetFloat("_Radius1", player1 ? visionRadius : 0f);
+    void OnRenderImage(RenderTexture src, RenderTexture dst)
+    {
+        Matrix4x4 gpuProj = GL.GetGPUProjectionMatrix(cam.projectionMatrix, false);
+        Matrix4x4 vp = gpuProj * cam.worldToCameraMatrix;
+        mat.SetMatrix("_InverseVP", vp.inverse);
 
-    mat.SetVector("_PlayerPos2", player2 ? player2.position : Vector3.one * 99999f);
-    mat.SetFloat("_Radius2", player2 ? visionRadius : 0f);
+        mat.SetVector("_PlayerPos1", activePlayer ? activePlayer.position : Vector3.one * 99999f);
+        mat.SetFloat("_Radius1", activePlayer ? visionRadius : 0f);
 
-    mat.SetFloat("_EdgeSoftness", edgeSoftness);
+        // Drugi krug ugašen — koristimo samo jedan aktivni
+        mat.SetVector("_PlayerPos2", Vector3.one * 99999f);
+        mat.SetFloat("_Radius2", 0f);
 
-    Graphics.Blit(src, dst, mat);
-}
+        mat.SetFloat("_EdgeSoftness", edgeSoftness);
+
+        Graphics.Blit(src, dst, mat);
+    }
 }
