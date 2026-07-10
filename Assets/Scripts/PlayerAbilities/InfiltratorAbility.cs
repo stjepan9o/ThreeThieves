@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// TO DO: povezati do kraja abilitye infiltratora, ap system
 public class InfiltratorAbility : MonoBehaviour
 {
     [Header("Ability Costs")]
@@ -19,10 +20,13 @@ public class InfiltratorAbility : MonoBehaviour
             CharacterSwitcher.Instance.ActiveCharacterType != CharacterType.Infiltrator)
             return;
 
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(KeyCode.G))
         {
             if (isHidden) DeactivateHide();
             else ActivateHide();
+
+            if (CharacterSwitcher.Instance.abilitiesHUD != null)
+                CharacterSwitcher.Instance.abilitiesHUD.FlashAbilityIcon(KeyCode.G);
         }
     }
 

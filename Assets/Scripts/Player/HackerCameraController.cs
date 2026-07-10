@@ -6,31 +6,56 @@ public class HackerCameraController : MonoBehaviour
     public Camera mainCamera;
     public TextMeshProUGUI cameraDisplayText;
 
+    [Header("Hacked Feedback")]
+    public GameObject hackedOverlay;
+
+    [Header("Controls")]
+    public KeyCode cycleKey = KeyCode.Tab;
+
     private Camera[] securityCameras;
+    private string[] cameraNames;
+    private int[] cameraNumbers;
     private int currentCameraIndex = 0;
     private Camera currentCamera;
     private bool hackerActive = false;
 
     void Start()
     {
-        
         if (cameraDisplayText != null)
             cameraDisplayText.gameObject.SetActive(false);
 
+        if (hackedOverlay != null)
+            hackedOverlay.SetActive(false);
+
         GameObject[] cameraObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
-        System.Collections.Generic.List<Camera> cameras = new System.Collections.Generic.List<Camera>();
+        var entries = new System.Collections.Generic.List<(string name, Camera cam)>();
         foreach (GameObject obj in cameraObjects)
         {
-            if (obj.name.Contains("security_camera"))
-            {
-                Camera cam = obj.GetComponent<Camera>();
-                if (cam == null)
-                    cam = obj.GetComponentInChildren<Camera>();
-                if (cam != null)
-                    cameras.Add(cam);
-            }
+            if (!obj.name.StartsWith("SurveillanceCamera")) continue;
+            if (obj.name.Contains("Zone") || obj.name.Contains("Mount")) continue;
+
+            Camera cam = obj.GetComponentInChildren<Camera>(true);
+            if (cam == null) continue;
+
+            bool alreadyAdded = false;
+            foreach (var e in entries)
+                if (e.cam == cam) { alreadyAdded = true; break; }
+
+            if (!alreadyAdded)
+                entries.Add((obj.name, cam));
         }
-        securityCameras = cameras.ToArray();
+
+        entries.Sort((a, b) => string.Compare(a.name, b.name, System.StringComparison.Ordinal));
+
+        securityCameras = new Camera[entries.Count];
+        cameraNames = new string[entries.Count];
+        cameraNumbers = new int[entries.Count];
+        for (int i = 0; i < entries.Count; i++)
+        {
+            securityCameras[i] = entries[i].cam;
+            cameraNames[i] = entries[i].name;
+            cameraNumbers[i] = ParseCameraNumber(entries[i].name);
+        }
 
         if (securityCameras.Length == 0)
         {
@@ -73,18 +98,41 @@ public class HackerCameraController : MonoBehaviour
                 mainCamera.enabled = true;
         }
 
+        UpdateHackedOverlay();
+
         if (!hackerActive || securityCameras.Length == 0) return;
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-            SetActiveCamera((currentCameraIndex + 1) % securityCameras.Length);
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-            SetActiveCamera((currentCameraIndex - 1 + securityCameras.Length) % securityCameras.Length);
 
-        for (int i = 0; i < securityCameras.Length && i < 9; i++)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1 + i))
-                SetActiveCamera(i);
-        }
+        if (HackMinigame.Instance != null && HackMinigame.Instance.IsRunning) return;
+
+        if (Input.GetKeyDown(cycleKey))
+            SetActiveCamera((currentCameraIndex + 1) % securityCameras.Length);
+    }
+
+
+    private int ParseCameraNumber(string name)
+    {
+        var m = System.Text.RegularExpressions.Regex.Match(name, @"(\d+)$");
+        return m.Success ? int.Parse(m.Groups[1].Value) : -1;
+    }
+
+    public int GetCurrentCameraNumber()
+    {
+        if (cameraNumbers == null || cameraNumbers.Length == 0) return -1;
+        return cameraNumbers[currentCameraIndex];
+    }
+
+
+    private void UpdateHackedOverlay()
+    {
+        if (hackedOverlay == null) return;
+
+        bool showOverlay = hackerActive &&
+                           CameraHackSystem.Instance != null &&
+                           CameraHackSystem.Instance.IsHacked(GetCurrentCameraNumber());
+
+        if (hackedOverlay.activeSelf != showOverlay)
+            hackedOverlay.SetActive(showOverlay);
     }
 
     void SetActiveCamera(int index)
@@ -99,9 +147,9 @@ public class HackerCameraController : MonoBehaviour
         currentCamera.enabled = true;
 
         if (cameraDisplayText != null)
-            cameraDisplayText.text = $"CCTV {currentCameraIndex + 1}/{securityCameras.Length}\n{currentCamera.gameObject.name}";
+            cameraDisplayText.text = $"CCTV {currentCameraIndex + 1}/{securityCameras.Length}\n{cameraNames[currentCameraIndex]}";
 
-        Debug.Log($"Prebačena na kameru: {currentCamera.gameObject.name}");
+        Debug.Log($"Aktivna kamera: {cameraNames[currentCameraIndex]}");
     }
 
     public int GetCurrentCameraIndex() => currentCameraIndex;
