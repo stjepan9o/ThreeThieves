@@ -39,9 +39,11 @@ public class GridPlayerController : MonoBehaviour
             movement.OnPathComplete -= HandlePathComplete;
     }
 
-    void Update()
+void Update()
     {
         if (!enabled) return;
+
+        if (KeypadUI.IsKeypadOpen) return;
 
         if (TurnManager.Instance != null && !TurnManager.Instance.IsPlayerTurn) return;
 

@@ -15,16 +15,10 @@ public class CharacterSwitcher : MonoBehaviour
     [Header("Characters")]
     public GridPlayerController infiltrator;  // Tipka 1
     public GridPlayerController musclMan;     // Tipka 2
-    public GridPlayerController hacker;       // Tipka 3 
+    public GridPlayerController hacker;       // Tipka 3 - ne moze se kretati
 
     [Header("Camera")]
     public CameraFollow cameraFollow;
-
-    [Header("HUD")]
-    public PlayerIconsHUD playerIconsHUD;
-
-    [Header("HUD")]
-    public AbilitiesHUD abilitiesHUD;
 
     private GridPlayerController activeCharacter;
     public CharacterType ActiveCharacterType { get; private set; } = CharacterType.None;
@@ -47,6 +41,9 @@ public class CharacterSwitcher : MonoBehaviour
 
     void Update()
     {
+        // Dok je keypad (ili bilo koji code unos) otvoren - ignoriraj prebacivanje likova
+        if (KeypadUI.IsKeypadOpen) return;
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
             SwitchTo(infiltrator, CharacterType.Infiltrator);
 
@@ -71,12 +68,6 @@ public class CharacterSwitcher : MonoBehaviour
 
         if (cameraFollow != null)
             cameraFollow.target = character.transform;
-
-        if (playerIconsHUD != null)
-            playerIconsHUD.SetActivePlayer(type);
-
-        if (abilitiesHUD != null)
-            abilitiesHUD.SetActivePlayer(type);
 
         Debug.Log($"Aktivan lik: {character.gameObject.name} ({type})");
     }

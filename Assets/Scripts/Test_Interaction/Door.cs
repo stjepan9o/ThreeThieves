@@ -11,8 +11,8 @@ public class Door : InteractableObject
     [Header("Character Restriction")]
     public CharacterType requiredCharacter = CharacterType.None;
 
-    private bool isOpen = false;
-    private bool isAnimating = false;
+    protected bool isOpen = false;
+    protected bool isAnimating = false;
     public GameObject doorMesh;
 
     void Start()
@@ -25,6 +25,7 @@ public class Door : InteractableObject
     {
         if (isOpen || isAnimating) return;
 
+        // Provjeri je li pravi lik aktivan
         if (requiredCharacter != CharacterType.None)
         {
             if (CharacterSwitcher.Instance == null)
@@ -46,6 +47,16 @@ public class Door : InteractableObject
         StartCoroutine(OpenDoor());
     }
 
+    /// <summary>
+    /// Javna metoda za otvaranje vrata izvana (npr. CodeDoor nakon tocnog koda).
+    /// Preskace provjeru requiredCharacter jer je kod vec "kljuc".
+    /// </summary>
+    public void ForceOpen()
+    {
+        if (isOpen || isAnimating) return;
+        StartCoroutine(OpenDoor());
+    }
+
     IEnumerator OpenDoor()
     {
         isAnimating = true;
@@ -63,17 +74,10 @@ public class Door : InteractableObject
         }
 
         transform.rotation = endRotation;
-
-        if (doorMesh != null)
-        {
-            doorMesh.layer = LayerMask.NameToLayer("Default");
-            Collider col = doorMesh.GetComponent<Collider>();
-            if (col != null) col.enabled = false;
-        }
-
-        GridManager.Instance?.RebuildGrid();
-
+        gameObject.layer = LayerMask.NameToLayer("Default");
         isOpen = true;
         isAnimating = false;
-        }
+        Debug.Log("Vrata su otvorena!");
+        GridManager.Instance.RebuildGrid();
+    }
 }

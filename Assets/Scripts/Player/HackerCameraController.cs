@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+
 public class HackerCameraController : MonoBehaviour
 {
     [Header("Camera Settings")]
@@ -13,10 +14,11 @@ public class HackerCameraController : MonoBehaviour
 
     void Start()
     {
-        
+        // Sakrij tekst na pocetku
         if (cameraDisplayText != null)
             cameraDisplayText.gameObject.SetActive(false);
 
+        // Pronadji sve security kamere
         GameObject[] cameraObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
         System.Collections.Generic.List<Camera> cameras = new System.Collections.Generic.List<Camera>();
         foreach (GameObject obj in cameraObjects)
@@ -34,21 +36,24 @@ public class HackerCameraController : MonoBehaviour
 
         if (securityCameras.Length == 0)
         {
-            Debug.LogError("Nema pronađenih security kamera!");
+            Debug.LogError("Nema pronadjenih security kamera!");
             return;
         }
 
-        Debug.Log($"Pronađeno {securityCameras.Length} kamera!");
+        Debug.Log($"Pronadjeno {securityCameras.Length} kamera!");
 
+        // Iskljuci sve kamere na pocetku
         foreach (Camera cam in securityCameras)
             cam.enabled = false;
     }
 
     void Update()
     {
+        // Provjeri je li Hacker aktivan
         bool isHackerNow = CharacterSwitcher.Instance != null &&
-                   CharacterSwitcher.Instance.ActiveCharacterType == CharacterType.Hacker;
+                           CharacterSwitcher.Instance.ActiveCharacterType == CharacterType.Hacker;
 
+        // Kad se Hacker tek aktivira
         if (isHackerNow && !hackerActive)
         {
             hackerActive = true;
@@ -60,6 +65,7 @@ public class HackerCameraController : MonoBehaviour
 
             SetActiveCamera(currentCameraIndex);
         }
+        // Kad se Hacker deaktivira
         else if (!isHackerNow && hackerActive)
         {
             hackerActive = false;
@@ -73,7 +79,11 @@ public class HackerCameraController : MonoBehaviour
                 mainCamera.enabled = true;
         }
 
+        // Kontrole samo kad je Hacker aktivan
         if (!hackerActive || securityCameras.Length == 0) return;
+
+        // Dok je keypad otvoren - ignoriraj prebacivanje kamera
+        if (KeypadUI.IsKeypadOpen) return;
 
         if (Input.GetKeyDown(KeyCode.RightArrow))
             SetActiveCamera((currentCameraIndex + 1) % securityCameras.Length);
@@ -101,7 +111,7 @@ public class HackerCameraController : MonoBehaviour
         if (cameraDisplayText != null)
             cameraDisplayText.text = $"CCTV {currentCameraIndex + 1}/{securityCameras.Length}\n{currentCamera.gameObject.name}";
 
-        Debug.Log($"Prebačena na kameru: {currentCamera.gameObject.name}");
+        Debug.Log($"Prebacena na kameru: {currentCamera.gameObject.name}");
     }
 
     public int GetCurrentCameraIndex() => currentCameraIndex;
