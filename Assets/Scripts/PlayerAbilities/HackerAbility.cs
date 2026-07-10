@@ -20,6 +20,9 @@ public class HackerAbility : MonoBehaviour
             CharacterSwitcher.Instance.ActiveCharacterType != CharacterType.Hacker)
             return;
 
+        if (TurnManager.Instance != null && !TurnManager.Instance.IsPlayerTurn)
+            return;
+
         if (HackMinigame.Instance == null || HackMinigame.Instance.IsRunning)
             return;
 
@@ -51,7 +54,7 @@ public class HackerAbility : MonoBehaviour
 
         if (!apManager.HasEnoughAP(hackCost))
         {
-            Debug.Log("Nedovoljno AP za hakiranje!");
+            apManager.NotifyNotEnoughAP();
             return;
         }
 

@@ -1,17 +1,18 @@
 using UnityEngine;
 
-// TO DO: povezati do kraja abilitye infiltratora, ap system
 public class InfiltratorAbility : MonoBehaviour
 {
     [Header("Ability Costs")]
-    public int hideCost = 3;
+    public int hideCost = 2;
 
     public bool isHidden = false;
     private Renderer[] renderers;
+    private ActionPointManager apManager;
 
     void Start()
     {
         renderers = GetComponentsInChildren<Renderer>();
+        apManager = FindFirstObjectByType<ActionPointManager>();
     }
 
     void Update()
@@ -20,10 +21,29 @@ public class InfiltratorAbility : MonoBehaviour
             CharacterSwitcher.Instance.ActiveCharacterType != CharacterType.Infiltrator)
             return;
 
+        if (TurnManager.Instance != null && !TurnManager.Instance.IsPlayerTurn)
+            return;
+
         if (Input.GetKeyDown(KeyCode.G))
         {
-            if (isHidden) DeactivateHide();
-            else ActivateHide();
+            if (isHidden)
+            {
+
+                DeactivateHide();
+            }
+            else
+            {
+                if (apManager != null && !apManager.HasEnoughAP(hideCost))
+                {
+                    apManager.NotifyNotEnoughAP();
+                    return;
+                }
+
+                ActivateHide();
+
+                if (apManager != null)
+                    apManager.SpendAP(hideCost);
+            }
 
             if (CharacterSwitcher.Instance.abilitiesHUD != null)
                 CharacterSwitcher.Instance.abilitiesHUD.FlashAbilityIcon(KeyCode.G);

@@ -48,17 +48,17 @@ public class GridPlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && !movement.IsMoving && !isOnCooldown)
             TryMove();
 
-        if (apText != null && apManager != null)
-            apText.text = "AP: " + apManager.CurrentAP;
+
     }
 
     void TryMove()
     {
-        if (!apManager.HasEnoughAP(moveCost))
-        {
-            Debug.Log("Nema dovoljno AP za kretanje!");
-            return;
-        }
+
+        // if (!apManager.HasEnoughAP(moveCost))
+        // {
+        //     Debug.Log("Nema dovoljno AP za kretanje!");
+        //     return;
+        // }
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -88,7 +88,8 @@ public class GridPlayerController : MonoBehaviour
             return;
 
         movement.SetPath(path, maxTilesPerTurn);
-        apManager.SpendAP(moveCost);
+
+        // apManager.SpendAP(moveCost);
     }
 
     void HandlePathComplete()
