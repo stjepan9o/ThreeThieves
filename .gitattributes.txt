@@ -1,0 +1,29 @@
+*.cginc text eol=lf
+*.cs text eol=lf
+*.shader text eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.tga binary
+*.tiff binary
+*.psd binary
+*.pdf binary
+*.mp3 binary
+*.ogg binary
+*.wav binary
+*.aif binary
+*.ttf binary
+*.otf binary
+*.fbx binary
+*.blend binary
+*.obj binary
+*.asset binary
+*.prefab binary
+*.unity binary
+*.unitypackage binary
+*.dll binary
+*.so binary
+*.dylib binary

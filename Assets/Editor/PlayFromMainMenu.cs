@@ -15,7 +15,7 @@ public class PlayFromMainMenu
         if (state == PlayModeStateChange.ExitingEditMode)
         {
             EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
-            EditorSceneManager.OpenScene("Assets/Scenes/MainMenu.unity");
+            EditorSceneManager.OpenScene("Assets/Scenes/SplashScreen.unity");
         }
     }
 }

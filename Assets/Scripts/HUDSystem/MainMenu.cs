@@ -12,27 +12,23 @@ public class MainMenu : MonoBehaviour
             tipsPanel.SetActive(false);
     }
 
-    // PlayButton → onClick
     public void PlayGame()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2); 
     }
 
-    // TipsButton → onClick
     public void OpenTips()
     {
         if (tipsPanel != null)
             tipsPanel.SetActive(true);
     }
 
-    // "Back" gumb unutar Tips panela → onClick
     public void CloseTips()
     {
         if (tipsPanel != null)
             tipsPanel.SetActive(false);
     }
 
-    // QuitButton → onClick
     public void QuitGame()
     {
         Debug.Log("Izlaz iz igre.");

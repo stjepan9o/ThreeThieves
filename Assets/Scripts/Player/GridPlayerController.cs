@@ -79,14 +79,12 @@ public class GridPlayerController : MonoBehaviour
         if (interactable == null)
             interactable = hit.collider.GetComponentInParent<InteractableObject>();
 
-        // --- PRIVREMENI DEBUG: makni nakon sto sredimo vrata ---
         string parentChain = hit.collider.name;
         Transform tp = hit.collider.transform.parent;
         while (tp != null) { parentChain += " <- " + tp.name; tp = tp.parent; }
         Debug.Log($"[CLICK] Pogodjeno: '{hit.collider.name}' (layer {LayerMask.LayerToName(hit.collider.gameObject.layer)}) | " +
                   $"InteractableObject u parentima: {(interactable == null ? "NEMA" : interactable.gameObject.name)} | " +
                   $"Lanac: {parentChain}");
-        // --- KRAJ DEBUG ---
 
         if (interactable != null)
         {
@@ -129,7 +127,6 @@ public class GridPlayerController : MonoBehaviour
             return;
         }
 
-        // Obican pokret po mapi ponistava eventualnu zakazanu interakciju.
         pendingInteraction = null;
 
         List<Vector3> path = Pathfinder.Instance.FindPath(transform.position, hit.point);
@@ -142,16 +139,10 @@ public class GridPlayerController : MonoBehaviour
         tilesRemainingThisTurn -= steps;
     }
 
-    /// <summary>
-    /// Zatrazi interakciju s objektom na zadanoj poziciji. Ako je aktivni lik vec
-    /// dovoljno blizu - interakcija se izvrsi odmah. Inace lik automatski dohoda do
-    /// najblizeg prohodnog polja uz objekt i interaktira cim stigne.
-    /// </summary>
     public void RequestInteraction(Vector3 targetPosition, float range, System.Action interaction)
     {
         if (interaction == null) return;
 
-        // Vec smo dovoljno blizu -> interaktiraj odmah.
         if (InteractionRange.IsActiveCharacterInRange(targetPosition, range))
         {
             interaction.Invoke();
@@ -174,22 +165,15 @@ public class GridPlayerController : MonoBehaviour
         pendingInteraction = interaction;
         pendingTargetPos = targetPosition;
         pendingRange = range;
-
-        // Namjerno bez maxTilesPerTurn ogranicenja - zelimo da lik stvarno dodje do objekta.
         movement.SetPath(path);
     }
 
     private List<Vector3> BuildPathToInteractable(Vector3 targetPosition)
     {
-        // Prvo probaj direktno - radi ako je polje objekta prohodno (npr. kartica na podu).
         List<Vector3> direct = Pathfinder.Instance.FindPath(transform.position, targetPosition);
         if (direct != null && direct.Count > 0)
             return direct;
 
-        // Objekt je na neprohodnom polju (vrata, sef...). Prohodno polje koje je
-        // geometrijski najblize NIJE nuzno i dohvatljivo (npr. polje s druge strane
-        // zida/vrata). Zato probaj sva prohodna polja oko objekta, od najblizeg prema
-        // daljem, i uzmi prvo do kojeg stvarno postoji put.
         if (GridManager.Instance == null)
             return null;
 
@@ -213,7 +197,6 @@ public class GridPlayerController : MonoBehaviour
             System.Action action = pendingInteraction;
             pendingInteraction = null;
 
-            // Provjeri jesmo li stvarno stigli dovoljno blizu (put je mogao biti blokiran).
             if (InteractionRange.IsActiveCharacterInRange(pendingTargetPos, pendingRange))
                 action.Invoke();
             else

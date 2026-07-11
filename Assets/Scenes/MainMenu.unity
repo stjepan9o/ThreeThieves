@@ -1496,8 +1496,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -465, y: 115}
-  m_SizeDelta: {x: 600, y: 50}
+  m_AnchoredPosition: {x: -365, y: 115}
+  m_SizeDelta: {x: 800, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &682533184
 MonoBehaviour:
@@ -1519,7 +1519,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1 / 2 / 3 - Switch characters
+  m_text: '1 / 2 / 3 - Switch characters      TAB - camera swithching
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d4426c219a4b9984cb30e8acd35d81c0, type: 2}
   m_sharedMaterial: {fileID: 2159168390842054712, guid: d4426c219a4b9984cb30e8acd35d81c0, type: 2}
@@ -3710,7 +3712,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: E - Skip turn
+  m_text: E - Skip turn       H - Open doors
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d4426c219a4b9984cb30e8acd35d81c0, type: 2}
   m_sharedMaterial: {fileID: 2159168390842054712, guid: d4426c219a4b9984cb30e8acd35d81c0, type: 2}
