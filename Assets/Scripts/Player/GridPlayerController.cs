@@ -7,18 +7,19 @@ using TMPro;
 public class GridPlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public int maxTilesPerTurn = 5;
-    public int moveCost = 2;
+    [Tooltip("Maksimalni broj tileova koji se mogu prijeći u jednom potezu.")]
+    public int maxTilesPerTurn = 20;
 
     [Header("References")]
     public ActionPointManager apManager;
     public TMP_Text apText;
 
     [Header("Character Settings")]
-    public bool canMove = true; 
+    public bool canMove = true;
 
     private UnitGridMovement movement;
     private bool isOnCooldown = false;
+    private int tilesRemainingThisTurn;
 
     void Awake()
     {
@@ -27,16 +28,25 @@ public class GridPlayerController : MonoBehaviour
 
     void Start()
     {
+        tilesRemainingThisTurn = maxTilesPerTurn;
+
         if (apManager == null)
             apManager = FindObjectOfType<ActionPointManager>();
 
+        TurnManager.OnPlayerTurnStart += ResetTiles;
         movement.OnPathComplete += HandlePathComplete;
     }
 
     void OnDestroy()
     {
+        TurnManager.OnPlayerTurnStart -= ResetTiles;
         if (movement != null)
             movement.OnPathComplete -= HandlePathComplete;
+    }
+
+    void ResetTiles()
+    {
+        tilesRemainingThisTurn = maxTilesPerTurn;
     }
 
     void Update()
@@ -54,12 +64,6 @@ public class GridPlayerController : MonoBehaviour
 
     void TryMove()
     {
-        if (!apManager.HasEnoughAP(moveCost))
-        {
-            Debug.Log("Nema dovoljno AP za kretanje!");
-            return;
-        }
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (!Physics.Raycast(ray, out RaycastHit hit))
             return;
@@ -77,7 +81,13 @@ public class GridPlayerController : MonoBehaviour
 
         if (!canMove)
         {
-            Debug.Log("Ovaj lik ne moze hodati po mapi!");
+            Debug.Log("Ovaj lik ne može hodati po mapi!");
+            return;
+        }
+
+        if (tilesRemainingThisTurn <= 0)
+        {
+            Debug.Log("Nema više tileova za ovaj potez — pritisni E za skip.");
             return;
         }
 
@@ -86,8 +96,9 @@ public class GridPlayerController : MonoBehaviour
         if (path == null || path.Count == 0)
             return;
 
-        movement.SetPath(path, maxTilesPerTurn);
-        apManager.SpendAP(moveCost);
+        int steps = Mathf.Min(path.Count, tilesRemainingThisTurn);
+        movement.SetPath(path, steps);
+        tilesRemainingThisTurn -= steps;
     }
 
     void HandlePathComplete()
