@@ -89,7 +89,7 @@ public class HackerCameraController : MonoBehaviour
             if (staticAudio != null)
                 staticAudio.Play();
 
-            SetActiveCamera(currentCameraIndex);
+            SetActiveCamera(0);
         }
         else if (!isHackerNow && hackerActive)
         {
