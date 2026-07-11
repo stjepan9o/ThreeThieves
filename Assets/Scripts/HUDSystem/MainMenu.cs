@@ -15,7 +15,7 @@ public class MainMenu : MonoBehaviour
     // PlayButton → onClick
     public void PlayGame()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2); 
     }
 
     // TipsButton → onClick
