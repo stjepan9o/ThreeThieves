@@ -21,7 +21,6 @@ public class GridPlayerController : MonoBehaviour
     private bool isOnCooldown = false;
     private int tilesRemainingThisTurn;
 
-    // Interakcija na koju cekamo da lik prvo dohoda do objekta.
     private System.Action pendingInteraction;
     private Vector3 pendingTargetPos;
     private float pendingRange;
@@ -91,6 +90,14 @@ public class GridPlayerController : MonoBehaviour
 
         if (interactable != null)
         {
+
+            if ((interactable is Door || interactable is SciFiGate) &&
+                CharacterSwitcher.Instance != null &&
+                CharacterSwitcher.Instance.abilitiesHUD != null)
+            {
+                CharacterSwitcher.Instance.abilitiesHUD.FlashDoorAbilityIcon();
+            }
+
             RequestInteraction(interactable.transform.position, interactable.interactionRange, interactable.Interact);
             StartCoroutine(Cooldown());
             return;

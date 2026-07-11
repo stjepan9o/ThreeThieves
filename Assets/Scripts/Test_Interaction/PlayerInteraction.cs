@@ -24,6 +24,9 @@ public class PlayerInteraction : MonoBehaviour
 
     void Update()
     {
+        if (TurnManager.Instance != null && !TurnManager.Instance.IsPlayerTurn)
+            return;
+
         if (Input.GetMouseButtonDown(0))
         {
             HandleClick();

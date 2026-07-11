@@ -66,6 +66,10 @@ public class HackTerminal : InteractableObject
         if (CharacterSwitcher.Instance != null)
             CharacterSwitcher.Instance.UnlockHacker();
 
+        Light hintLight = GetComponentInChildren<Light>();
+        if (hintLight != null)
+            hintLight.gameObject.SetActive(false);
+
         Debug.Log($"{gameObject.name}: Server hakiran! Hacker otkljucan.");
     }
 }
