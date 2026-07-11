@@ -1,22 +1,24 @@
 using UnityEngine;
+using System.Collections;
 
 public class VaultInteraction : MonoBehaviour
 {
     public Transform vaultDoor;
-    public GameObject missionCompleteUI;
     public GameObject keycardWarningUI;
 
     [Header("Interaction Range")]
     [Tooltip("Maksimalna udaljenost (u poljima/jedinicama) s koje aktivni lik moze otvoriti sef.")]
     public float interactionRange = 2.5f;
 
+    [Header("Victory Settings")]
+    [Tooltip("Koliko sekundi nakon otvaranja sefa da se pojavi end screen.")]
+    public float victoryDelay = 2.5f;
+
     private bool isOpening = false;
     private Quaternion targetRotation = Quaternion.Euler(-90f, -100f, 0f);
 
     private void Start()
     {
-        if (missionCompleteUI == null)
-            missionCompleteUI = GameObject.Find("MissionCompleteUI");
         if (keycardWarningUI == null)
             keycardWarningUI = GameObject.Find("KeycardWarning");
     }
@@ -32,7 +34,10 @@ public class VaultInteraction : MonoBehaviour
             );
 
             if (vaultDoor.localRotation == targetRotation)
+            {
                 isOpening = false;
+                StartCoroutine(VictoryRoutine());
+            }
         }
     }
 
@@ -56,11 +61,9 @@ public class VaultInteraction : MonoBehaviour
     {
         if (GameState.Instance.hasKeycard)
         {
-            Debug.Log("MISSION COMPLETE");
+            Debug.Log("Sef otvoren!");
             GameState.Instance.CompleteMission();
             isOpening = true;
-            if (missionCompleteUI != null)
-                missionCompleteUI.SetActive(true);
         }
         else
         {
@@ -70,6 +73,12 @@ public class VaultInteraction : MonoBehaviour
                 Invoke(nameof(HideWarning), 2f);
             }
         }
+    }
+
+    IEnumerator VictoryRoutine()
+    {
+        yield return new WaitForSeconds(victoryDelay);
+        GameOverManager.Instance?.TriggerVictory();
     }
 
     private void HideWarning()

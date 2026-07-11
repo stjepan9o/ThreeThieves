@@ -7,8 +7,8 @@ using TMPro;
 public class GridPlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public int maxTilesPerTurn = 5;
-    public int moveCost = 2;
+    [Tooltip("Maksimalni broj tileova koji se mogu prijeći u jednom potezu.")]
+    public int maxTilesPerTurn = 20;
 
     [Header("References")]
     public ActionPointManager apManager;
@@ -19,6 +19,7 @@ public class GridPlayerController : MonoBehaviour
 
     private UnitGridMovement movement;
     private bool isOnCooldown = false;
+    private int tilesRemainingThisTurn;
 
     // Interakcija na koju cekamo da lik prvo dohoda do objekta.
     private System.Action pendingInteraction;
@@ -32,19 +33,28 @@ public class GridPlayerController : MonoBehaviour
 
     void Start()
     {
+        tilesRemainingThisTurn = maxTilesPerTurn;
+
         if (apManager == null)
             apManager = FindObjectOfType<ActionPointManager>();
 
+        TurnManager.OnPlayerTurnStart += ResetTiles;
         movement.OnPathComplete += HandlePathComplete;
     }
 
     void OnDestroy()
     {
+        TurnManager.OnPlayerTurnStart -= ResetTiles;
         if (movement != null)
             movement.OnPathComplete -= HandlePathComplete;
     }
 
-void Update()
+    void ResetTiles()
+    {
+        tilesRemainingThisTurn = maxTilesPerTurn;
+    }
+
+    void Update()
     {
         if (!enabled) return;
 
@@ -61,13 +71,6 @@ void Update()
 
     void TryMove()
     {
-
-        // if (!apManager.HasEnoughAP(moveCost))
-        // {
-        //     Debug.Log("Nema dovoljno AP za kretanje!");
-        //     return;
-        // }
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
@@ -95,7 +98,13 @@ void Update()
 
         if (!canMove)
         {
-            Debug.Log("Ovaj lik ne moze hodati po mapi!");
+            Debug.Log("Ovaj lik ne može hodati po mapi!");
+            return;
+        }
+
+        if (tilesRemainingThisTurn <= 0)
+        {
+            Debug.Log("Nema više tileova za ovaj potez — pritisni E za skip.");
             return;
         }
 
@@ -107,9 +116,9 @@ void Update()
         if (path == null || path.Count == 0)
             return;
 
-        movement.SetPath(path, maxTilesPerTurn);
-
-        // apManager.SpendAP(moveCost);
+        int steps = Mathf.Min(path.Count, tilesRemainingThisTurn);
+        movement.SetPath(path, steps);
+        tilesRemainingThisTurn -= steps;
     }
 
     /// <summary>
