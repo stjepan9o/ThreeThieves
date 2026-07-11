@@ -10,7 +10,7 @@ public class Door : InteractableObject
 
     [Header("Interaction")]
     [Tooltip("Tipka kojom aktivni lik otvara vrata kad je dovoljno blizu.")]
-    public KeyCode interactKey = KeyCode.F;
+    public KeyCode interactKey = KeyCode.H;
 
     [Header("Character Restriction")]
     public CharacterType requiredCharacter = CharacterType.None;
@@ -24,12 +24,14 @@ public class Door : InteractableObject
 
     // Collider vrata za mjerenje blizine do najblize tocke (ne do pivota).
     protected Collider rangeCollider;
+    protected ActionPointManager apManager;
 
     void Start()
     {
-        interactionPrompt = "Otvori vrata (F)";
+        interactionPrompt = "Otvori vrata (H)";
         apCost = 2;
         rangeCollider = GetComponentInChildren<Collider>();
+        apManager = FindFirstObjectByType<ActionPointManager>();
     }
 
     void Update()
@@ -74,9 +76,19 @@ public class Door : InteractableObject
 
             if (activeType != requiredCharacter)
             {
-                Debug.Log($"Ova vrata moze otvoriti samo {requiredCharacter}! Trenutno aktivan: {activeType}");
+                APDisplay.Instance?.ShowMessage($"Only the {requiredCharacter} can open this door!");
                 return;
             }
+        }
+
+        if (apManager != null)
+        {
+            if (!apManager.HasEnoughAP(apCost))
+            {
+                apManager.NotifyNotEnoughAP();
+                return;
+            }
+            apManager.SpendAP(apCost);
         }
 
         Debug.Log($"{gameObject.name}: Vrata se otvaraju!");

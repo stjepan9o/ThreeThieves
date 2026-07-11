@@ -63195,7 +63195,7 @@ MonoBehaviour:
   distanceB: 1.2
   slideSpeed: 3
   requiredCharacter: 0
-  interactKey: 102
+  interactKey: 104
   canClose: 0
   autoCloseDelay: 0
   audioSource: {fileID: 0}
@@ -69185,7 +69185,7 @@ MonoBehaviour:
   openAngle: 90
   openSpeed: 2
   openInward: 0
-  interactKey: 102
+  interactKey: 104
   requiredCharacter: 0
   openSound: {fileID: 0}
   doorMesh: {fileID: 0}

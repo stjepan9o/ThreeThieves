@@ -44,7 +44,7 @@ public class SciFiGate : InteractableObject
 
     [Header("Interaction")]
     [Tooltip("Tipka kojom aktivni lik otvara vrata kad je dovoljno blizu.")]
-    public KeyCode interactKey = KeyCode.F;
+    public KeyCode interactKey = KeyCode.H;
 
     [Header("Ponasanje")]
     [Tooltip("Ako je ukljuceno, ponovna interakcija zatvara vrata.")]
@@ -70,15 +70,17 @@ public class SciFiGate : InteractableObject
 
     // Collider vrata za mjerenje blizine do najblize tocke (ne do pivota).
     protected Collider rangeCollider;
+    protected ActionPointManager apManager;
 
     Vector3 OffsetA => Dir(directionA) * distanceA;
     Vector3 OffsetB => panelBMirrorsA ? -OffsetA : Dir(directionB) * distanceB;
 
     void Start()
     {
-        interactionPrompt = "Otvori vrata (F)";
+        interactionPrompt = "Otvori vrata (H)";
         apCost = 2;
         rangeCollider = GetComponentInChildren<Collider>();
+        apManager = FindFirstObjectByType<ActionPointManager>();
 
         // Ako nismo rucno zapamtili zatvoreno, uzmi trenutni polozaj kao zatvoreno.
         if (!captured)
@@ -133,9 +135,19 @@ public class SciFiGate : InteractableObject
             CharacterType activeType = CharacterSwitcher.Instance.ActiveCharacterType;
             if (activeType != requiredCharacter)
             {
-                Debug.Log($"Ova vrata moze otvoriti samo {requiredCharacter}! Trenutno aktivan: {activeType}");
+                APDisplay.Instance?.ShowMessage($"Only the {requiredCharacter} can open this door!");
                 return;
             }
+        }
+
+        if (apManager != null)
+        {
+            if (!apManager.HasEnoughAP(apCost))
+            {
+                apManager.NotifyNotEnoughAP();
+                return;
+            }
+            apManager.SpendAP(apCost);
         }
 
         ForceOpen();
