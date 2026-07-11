@@ -5,7 +5,6 @@ public class GameState : MonoBehaviour
     public static GameState Instance { get; private set; }
 
     public bool hasKeycard = false;
-    public bool missionComplete = false;
 
     private void Awake()
     {
@@ -20,10 +19,5 @@ public class GameState : MonoBehaviour
     public void PickupKeycard()
     {
         hasKeycard = true;
-    }
-
-    public void CompleteMission()
-    {
-        missionComplete = true;
     }
 }

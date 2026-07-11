@@ -4,6 +4,8 @@ using System.Collections;
 
 public class APDisplay : MonoBehaviour
 {
+    public static APDisplay Instance { get; private set; }
+
     [SerializeField] private TMP_Text apText;
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private ActionPointManager apManager;
@@ -12,6 +14,19 @@ public class APDisplay : MonoBehaviour
     [SerializeField] private float messageDuration = 2f;
 
     private Coroutine messageRoutine;
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
+    public void ShowMessage(string message)
+    {
+        if (statusText == null) return;
+
+        if (messageRoutine != null) StopCoroutine(messageRoutine);
+        messageRoutine = StartCoroutine(TemporaryMessage(message));
+    }
 
     void Start()
     {

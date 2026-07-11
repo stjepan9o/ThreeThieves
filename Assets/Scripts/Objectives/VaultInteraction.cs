@@ -4,24 +4,15 @@ using System.Collections;
 public class VaultInteraction : MonoBehaviour
 {
     public Transform vaultDoor;
-    public GameObject keycardWarningUI;
-
-    [Header("Interaction Range")]
-    [Tooltip("Maksimalna udaljenost (u poljima/jedinicama) s koje aktivni lik moze otvoriti sef.")]
-    public float interactionRange = 2.5f;
 
     [Header("Victory Settings")]
-    [Tooltip("Koliko sekundi nakon otvaranja sefa da se pojavi end screen.")]
     public float victoryDelay = 2.5f;
 
     private bool isOpening = false;
+    private bool isOpened = false;
     private Quaternion targetRotation = Quaternion.Euler(-90f, -100f, 0f);
 
-    private void Start()
-    {
-        if (keycardWarningUI == null)
-            keycardWarningUI = GameObject.Find("KeycardWarning");
-    }
+    public bool IsOpened => isOpened;
 
     private void Update()
     {
@@ -41,49 +32,22 @@ public class VaultInteraction : MonoBehaviour
         }
     }
 
-    private void OnMouseDown()
+    public bool TryForceOpen()
     {
-        GridPlayerController active = CharacterSwitcher.Instance != null
-            ? CharacterSwitcher.Instance.GetActiveCharacter()
-            : null;
+        if (isOpened || isOpening) return false;
 
-        if (active != null)
-        {
-            // Lik ce sam dohodati do sefa (ako je predaleko) i otvoriti ga kad stigne.
-            active.RequestInteraction(transform.position, interactionRange, OpenVault);
-            return;
-        }
+        if (GameState.Instance == null || !GameState.Instance.hasKeycard)
+            return false;
 
-        OpenVault();
-    }
-
-    private void OpenVault()
-    {
-        if (GameState.Instance.hasKeycard)
-        {
-            Debug.Log("Sef otvoren!");
-            GameState.Instance.CompleteMission();
-            isOpening = true;
-        }
-        else
-        {
-            if (keycardWarningUI != null)
-            {
-                keycardWarningUI.SetActive(true);
-                Invoke(nameof(HideWarning), 2f);
-            }
-        }
+        Debug.Log("Sef otvoren!");
+        isOpened = true;
+        isOpening = true;
+        return true;
     }
 
     IEnumerator VictoryRoutine()
     {
         yield return new WaitForSeconds(victoryDelay);
         GameOverManager.Instance?.TriggerVictory();
-    }
-
-    private void HideWarning()
-    {
-        if (keycardWarningUI != null)
-            keycardWarningUI.SetActive(false);
     }
 }
