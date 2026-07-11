@@ -15,6 +15,23 @@ public class InfiltratorAbility : MonoBehaviour
         apManager = FindFirstObjectByType<ActionPointManager>();
     }
 
+    void OnEnable()
+    {
+        TurnManager.OnPlayerTurnStart += ResetHide;
+    }
+
+    void OnDisable()
+    {
+        TurnManager.OnPlayerTurnStart -= ResetHide;
+    }
+
+
+    private void ResetHide()
+    {
+        if (isHidden)
+            DeactivateHide();
+    }
+
     void Update()
     {
         if (CharacterSwitcher.Instance == null ||
@@ -26,24 +43,19 @@ public class InfiltratorAbility : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.G))
         {
-            if (isHidden)
+
+            if (isHidden) return;
+
+            if (apManager != null && !apManager.HasEnoughAP(hideCost))
             {
-
-                DeactivateHide();
+                apManager.NotifyNotEnoughAP();
+                return;
             }
-            else
-            {
-                if (apManager != null && !apManager.HasEnoughAP(hideCost))
-                {
-                    apManager.NotifyNotEnoughAP();
-                    return;
-                }
 
-                ActivateHide();
+            ActivateHide();
 
-                if (apManager != null)
-                    apManager.SpendAP(hideCost);
-            }
+            if (apManager != null)
+                apManager.SpendAP(hideCost);
 
             if (CharacterSwitcher.Instance.abilitiesHUD != null)
                 CharacterSwitcher.Instance.abilitiesHUD.FlashAbilityIcon(KeyCode.G);

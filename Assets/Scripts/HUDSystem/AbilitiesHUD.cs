@@ -10,7 +10,7 @@ public class AbilitiesHUD : MonoBehaviour
     [SerializeField] private Sprite muscleLabel;
     [SerializeField] private Sprite hackerLabel;
 
-    [Header("Ability(H)")]
+    [Header("Ability(G)")]
     [SerializeField] private Image stayIcon;
     [SerializeField] private Sprite infiltratorStay;
     [SerializeField] private Sprite muscleStay;
@@ -47,15 +47,21 @@ public class AbilitiesHUD : MonoBehaviour
                 break;
         }
 
+
+        if (flashIcon != null)
+            flashIcon.gameObject.SetActive(type != CharacterType.Hacker);
     }
-
-
 
     public void FlashAbilityIcon(KeyCode key)
     {
         if (key == KeyCode.G && stayIcon != null)
             Flash(stayIcon.rectTransform);
-        else if (key == KeyCode.H && flashIcon != null)
+    }
+
+
+    public void FlashDoorAbilityIcon()
+    {
+        if (flashIcon != null && flashIcon.gameObject.activeSelf)
             Flash(flashIcon.rectTransform);
     }
 

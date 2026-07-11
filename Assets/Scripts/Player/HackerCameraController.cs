@@ -9,6 +9,9 @@ public class HackerCameraController : MonoBehaviour
     [Header("Hacked Feedback")]
     public GameObject hackedOverlay;
 
+    [Header("Audio")]
+    public AudioSource staticAudio;
+
     [Header("Controls")]
     public KeyCode cycleKey = KeyCode.Tab;
 
@@ -83,6 +86,9 @@ public class HackerCameraController : MonoBehaviour
             if (mainCamera != null)
                 mainCamera.enabled = false;
 
+            if (staticAudio != null)
+                staticAudio.Play();
+
             SetActiveCamera(currentCameraIndex);
         }
         else if (!isHackerNow && hackerActive)
@@ -96,6 +102,9 @@ public class HackerCameraController : MonoBehaviour
 
             if (mainCamera != null)
                 mainCamera.enabled = true;
+
+            if (staticAudio != null)
+                staticAudio.Stop();
         }
 
         UpdateHackedOverlay();

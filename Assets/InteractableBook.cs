@@ -9,5 +9,10 @@ public class InteractableBook : InteractableObject
     {
         if (codePanel != null)
             codePanel.SetActive(true);
+
+
+        Light hintLight = GetComponentInChildren<Light>();
+        if (hintLight != null)
+            hintLight.gameObject.SetActive(false);
     }
 }
