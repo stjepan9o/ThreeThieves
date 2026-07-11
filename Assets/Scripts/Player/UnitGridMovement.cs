@@ -15,7 +15,12 @@ public class UnitGridMovement : MonoBehaviour
              "ispravno okretati u smjeru kretanja. Najcesce tocne vrijednosti su -90, 90 ili 180, " +
              "ovisno o tome kako je model izvorno modeliran/uvezen u Unity.")]
     public float modelForwardOffset = 0f;
- 
+
+    [Header("Audio")]
+    public AudioClip walkSound;
+
+    private AudioSource footstepSource;
+
     public bool IsMoving { get; private set; }
  
 
@@ -25,25 +30,44 @@ public class UnitGridMovement : MonoBehaviour
     private int pathIndex;
  
     public event Action OnPathComplete;
- 
+
+    void Awake()
+    {
+        if (walkSound != null)
+        {
+            footstepSource = gameObject.AddComponent<AudioSource>();
+            footstepSource.clip = walkSound;
+            footstepSource.loop = true;
+            footstepSource.playOnAwake = false;
+            footstepSource.spatialBlend = 0f;
+            footstepSource.volume = 0.5f;
+        }
+    }
+
     public void SetPath(List<Vector3> path, int maxSteps = -1)
     {
         if (path == null || path.Count == 0)
             return;
- 
+
         if (maxSteps >= 0 && path.Count > maxSteps)
             path = path.GetRange(0, maxSteps);
- 
+
         currentPath = path;
         pathIndex = 0;
         IsMoving = true;
+
+        if (footstepSource != null && !footstepSource.isPlaying)
+            footstepSource.Play();
     }
- 
+
     public void StopMoving()
     {
         currentPath = null;
         pathIndex = 0;
         IsMoving = false;
+
+        if (footstepSource != null)
+            footstepSource.Stop();
     }
  
     void Update()
@@ -82,6 +106,10 @@ public class UnitGridMovement : MonoBehaviour
         IsMoving = false;
         currentPath = null;
         pathIndex = 0;
+
+        if (footstepSource != null)
+            footstepSource.Stop();
+
         OnPathComplete?.Invoke();
     }
 }

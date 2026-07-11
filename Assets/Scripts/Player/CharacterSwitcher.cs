@@ -29,6 +29,10 @@ public class CharacterSwitcher : MonoBehaviour
     [Tooltip("Hacker je zakljucan dok Infiltrator ne rijesi minigame na serveru.")]
     public bool hackerUnlocked = false;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip switchSound;
+
     private GridPlayerController activeCharacter;
     public CharacterType ActiveCharacterType { get; private set; } = CharacterType.None;
 
@@ -82,6 +86,12 @@ public class CharacterSwitcher : MonoBehaviour
     void SwitchTo(GridPlayerController character, CharacterType type)
     {
         if (character == null) return;
+
+        if (audioSource != null && switchSound != null &&
+            ActiveCharacterType != CharacterType.None && ActiveCharacterType != type)
+        {
+            audioSource.PlayOneShot(switchSound);
+        }
 
         if (infiltrator != null) infiltrator.enabled = false;
         if (musclMan != null) musclMan.enabled = false;

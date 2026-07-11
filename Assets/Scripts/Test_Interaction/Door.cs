@@ -11,6 +11,9 @@ public class Door : InteractableObject
     [Header("Character Restriction")]
     public CharacterType requiredCharacter = CharacterType.None;
 
+    [Header("Audio")]
+    public AudioClip openSound;
+
     protected bool isOpen = false;
     protected bool isAnimating = false;
     public GameObject doorMesh;
@@ -66,6 +69,12 @@ public class Door : InteractableObject
     IEnumerator OpenDoor()
     {
         isAnimating = true;
+
+        if (openSound != null && CharacterSwitcher.Instance != null &&
+            CharacterSwitcher.Instance.audioSource != null)
+        {
+            CharacterSwitcher.Instance.audioSource.PlayOneShot(openSound);
+        }
 
         float targetAngle = openInward ? -openAngle : openAngle;
         Quaternion startRotation = transform.rotation;

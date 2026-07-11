@@ -196,8 +196,12 @@ public class SciFiGate : InteractableObject
 
     void PlaySound(AudioClip clip)
     {
-        if (audioSource != null && clip != null)
+        if (clip == null) return;
+
+        if (audioSource != null)
             audioSource.PlayOneShot(clip);
+        else if (CharacterSwitcher.Instance != null && CharacterSwitcher.Instance.audioSource != null)
+            CharacterSwitcher.Instance.audioSource.PlayOneShot(clip);
     }
 
     static Vector3 Dir(SlideDirection d)

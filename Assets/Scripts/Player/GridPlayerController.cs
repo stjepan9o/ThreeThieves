@@ -103,6 +103,20 @@ public class GridPlayerController : MonoBehaviour
             return;
         }
 
+        InteractableBook book = hit.collider.GetComponentInParent<InteractableBook>();
+        if (book == null)
+        {
+            InteractableBook candidate = FindObjectOfType<InteractableBook>();
+            if (candidate != null && Vector3.Distance(hit.point, candidate.transform.position) < 3f)
+                book = candidate;
+        }
+        if (book != null)
+        {
+            RequestInteraction(book.transform.position, InteractableBook.InteractionRange, book.Open);
+            StartCoroutine(Cooldown());
+            return;
+        }
+
         if (!canMove)
         {
             Debug.Log("Ovaj lik ne može hodati po mapi!");

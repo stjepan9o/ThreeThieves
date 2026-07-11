@@ -5,6 +5,9 @@ public class MusclemanAbility : MonoBehaviour
     [Header("Ability Costs")]
     public int openVaultCost = 2;
 
+    [Header("Audio")]
+    public AudioClip openVaultSound;
+
     private const float OpenRange = 10f;
 
     private ActionPointManager apManager;
@@ -65,7 +68,12 @@ public class MusclemanAbility : MonoBehaviour
         }
 
         if (vault.TryForceOpen())
+        {
             apManager.SpendAP(openVaultCost);
+
+            if (openVaultSound != null && CharacterSwitcher.Instance.audioSource != null)
+                CharacterSwitcher.Instance.audioSource.PlayOneShot(openVaultSound);
+        }
         else if (!vault.IsOpened)
             APDisplay.Instance?.ShowMessage("Keycard missing!");
     }
