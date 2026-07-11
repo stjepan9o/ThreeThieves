@@ -26,4 +26,27 @@ public static class InteractionRange
 
         return Vector3.Distance(a, b) <= range;
     }
+
+    /// <summary>
+    /// Kao gornja, ali mjeri do NAJBLIZE tocke collidera (Collider.ClosestPoint)
+    /// umjesto do pivota. Vazno za velike/siroke objekte (vrata): lik dohoda na
+    /// susjedno polje koje je dijagonalno ~2.83 od pivota pa provjera na 2.5 padne,
+    /// iako lik fizicki stoji uz vrata. Ako collider fali, pada natrag na pivot.
+    /// </summary>
+    public static bool IsActiveCharacterInRange(Vector3 targetPosition, Collider targetCollider, float range)
+    {
+        if (CharacterSwitcher.Instance == null)
+            return true;
+
+        GridPlayerController active = CharacterSwitcher.Instance.GetActiveCharacter();
+        if (active == null)
+            return true;
+
+        Vector3 a = active.transform.position;
+        Vector3 b = targetCollider != null ? targetCollider.ClosestPoint(a) : targetPosition;
+        a.y = 0f;
+        b.y = 0f;
+
+        return Vector3.Distance(a, b) <= range;
+    }
 }

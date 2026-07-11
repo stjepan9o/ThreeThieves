@@ -42,6 +42,10 @@ public class SciFiGate : InteractableObject
     [Header("Character Restriction")]
     public CharacterType requiredCharacter = CharacterType.None;
 
+    [Header("Interaction")]
+    [Tooltip("Tipka kojom aktivni lik otvara vrata kad je dovoljno blizu.")]
+    public KeyCode interactKey = KeyCode.F;
+
     [Header("Ponasanje")]
     [Tooltip("Ako je ukljuceno, ponovna interakcija zatvara vrata.")]
     public bool canClose = true;
@@ -64,13 +68,17 @@ public class SciFiGate : InteractableObject
     protected bool isOpen = false;
     protected bool isAnimating = false;
 
+    // Collider vrata za mjerenje blizine do najblize tocke (ne do pivota).
+    protected Collider rangeCollider;
+
     Vector3 OffsetA => Dir(directionA) * distanceA;
     Vector3 OffsetB => panelBMirrorsA ? -OffsetA : Dir(directionB) * distanceB;
 
     void Start()
     {
-        interactionPrompt = "Otvori vrata";
+        interactionPrompt = "Otvori vrata (F)";
         apCost = 2;
+        rangeCollider = GetComponentInChildren<Collider>();
 
         // Ako nismo rucno zapamtili zatvoreno, uzmi trenutni polozaj kao zatvoreno.
         if (!captured)
@@ -83,6 +91,25 @@ public class SciFiGate : InteractableObject
         // Snapaj na zatvoreno na startu (da preview poza u editoru ne pokvari pocetak).
         if (panelA != null) { panelA.localPosition = closedLocalA; closedLayerA = panelA.gameObject.layer; }
         if (panelB != null) { panelB.localPosition = closedLocalB; closedLayerB = panelB.gameObject.layer; }
+    }
+
+    void Update()
+    {
+        if (isOpen || isAnimating) return;
+        if (!Input.GetKeyDown(interactKey)) return;
+
+        // Ne tijekom neprijateljskog poteza ni dok je otvoren keypad/minigame.
+        if (TurnManager.Instance != null && !TurnManager.Instance.IsPlayerTurn) return;
+        if (KeypadUI.IsKeypadOpen || WireTaskManager.IsMinigameOpen) return;
+
+        if (!InteractionRange.IsActiveCharacterInRange(transform.position, rangeCollider, interactionRange))
+            return;
+
+        // Bljesni door-ikonicu kao potvrdu (sama je skrivena kad je Hacker aktivan).
+        if (CharacterSwitcher.Instance != null && CharacterSwitcher.Instance.abilitiesHUD != null)
+            CharacterSwitcher.Instance.abilitiesHUD.FlashDoorAbilityIcon();
+
+        Interact();
     }
 
     protected override void OnInteract()
