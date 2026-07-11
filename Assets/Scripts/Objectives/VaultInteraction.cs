@@ -6,6 +6,10 @@ public class VaultInteraction : MonoBehaviour
     public GameObject missionCompleteUI;
     public GameObject keycardWarningUI;
 
+    [Header("Interaction Range")]
+    [Tooltip("Maksimalna udaljenost (u poljima/jedinicama) s koje aktivni lik moze otvoriti sef.")]
+    public float interactionRange = 2.5f;
+
     private bool isOpening = false;
     private Quaternion targetRotation = Quaternion.Euler(-90f, -100f, 0f);
 
@@ -33,6 +37,22 @@ public class VaultInteraction : MonoBehaviour
     }
 
     private void OnMouseDown()
+    {
+        GridPlayerController active = CharacterSwitcher.Instance != null
+            ? CharacterSwitcher.Instance.GetActiveCharacter()
+            : null;
+
+        if (active != null)
+        {
+            // Lik ce sam dohodati do sefa (ako je predaleko) i otvoriti ga kad stigne.
+            active.RequestInteraction(transform.position, interactionRange, OpenVault);
+            return;
+        }
+
+        OpenVault();
+    }
+
+    private void OpenVault()
     {
         if (GameState.Instance.hasKeycard)
         {

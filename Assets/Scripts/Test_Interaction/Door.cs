@@ -25,6 +25,12 @@ public class Door : InteractableObject
     {
         if (isOpen || isAnimating) return;
 
+        if (!InteractionRange.IsActiveCharacterInRange(transform.position, interactionRange))
+        {
+            Debug.Log($"{gameObject.name}: Predaleko si od vrata - pridji blize.");
+            return;
+        }
+
         // Provjeri je li pravi lik aktivan
         if (requiredCharacter != CharacterType.None)
         {

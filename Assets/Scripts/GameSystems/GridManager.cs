@@ -128,6 +128,46 @@ public class GridManager : MonoBehaviour
         return neighbours;
     }
 
+    /// <summary>
+    /// Vrati prohodna (walkable) polja oko zadane svjetske pozicije, poredana od
+    /// najblizeg prstena prema van (dakle od najblizeg objektu prema daljem).
+    /// Korisno kad je sam objekt (vrata, sef, kartica) na neprohodnom polju, pa
+    /// lik mora stati na susjedno polje da bi interaktirao s njim. Pozivatelj
+    /// zatim moze provjeriti do kojeg od tih polja stvarno postoji put.
+    /// </summary>
+    public List<Node> GetWalkableNodesAround(Vector3 worldPosition, int maxRingSearch = 8)
+    {
+        List<Node> result = new List<Node>();
+        Node origin = NodeFromWorldPoint(worldPosition);
+
+        if (origin.walkable)
+            result.Add(origin);
+
+        for (int r = 1; r <= maxRingSearch; r++)
+        {
+            for (int x = -r; x <= r; x++)
+            {
+                for (int y = -r; y <= r; y++)
+                {
+                    // Samo rub prstena na udaljenosti r (unutrasnji prsteni su vec dodani).
+                    if (Mathf.Max(Mathf.Abs(x), Mathf.Abs(y)) != r)
+                        continue;
+
+                    int cx = origin.gridX + x;
+                    int cy = origin.gridY + y;
+                    if (cx < 0 || cx >= gridSizeX || cy < 0 || cy >= gridSizeY)
+                        continue;
+
+                    Node n = grid[cx, cy];
+                    if (n.walkable)
+                        result.Add(n);
+                }
+            }
+        }
+
+        return result;
+    }
+
     public int MaxSize => gridSizeX * gridSizeY;
 
     public void RebuildGrid()
