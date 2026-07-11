@@ -8,6 +8,10 @@ public class Door : InteractableObject
     public float openSpeed = 2f;
     public bool openInward = false;
 
+    [Header("Interaction")]
+    [Tooltip("Tipka kojom aktivni lik otvara vrata kad je dovoljno blizu.")]
+    public KeyCode interactKey = KeyCode.F;
+
     [Header("Character Restriction")]
     public CharacterType requiredCharacter = CharacterType.None;
 
@@ -15,17 +19,40 @@ public class Door : InteractableObject
     protected bool isAnimating = false;
     public GameObject doorMesh;
 
+    // Collider vrata za mjerenje blizine do najblize tocke (ne do pivota).
+    protected Collider rangeCollider;
+
     void Start()
     {
-        interactionPrompt = "Otvori vrata";
+        interactionPrompt = "Otvori vrata (F)";
         apCost = 2;
+        rangeCollider = GetComponentInChildren<Collider>();
+    }
+
+    void Update()
+    {
+        if (isOpen || isAnimating) return;
+        if (!Input.GetKeyDown(interactKey)) return;
+
+        // Ne tijekom neprijateljskog poteza ni dok je otvoren keypad/minigame.
+        if (TurnManager.Instance != null && !TurnManager.Instance.IsPlayerTurn) return;
+        if (KeypadUI.IsKeypadOpen || WireTaskManager.IsMinigameOpen) return;
+
+        if (!InteractionRange.IsActiveCharacterInRange(transform.position, rangeCollider, interactionRange))
+            return;
+
+        // Bljesni door-ikonicu kao potvrdu (sama je skrivena kad je Hacker aktivan).
+        if (CharacterSwitcher.Instance != null && CharacterSwitcher.Instance.abilitiesHUD != null)
+            CharacterSwitcher.Instance.abilitiesHUD.FlashDoorAbilityIcon();
+
+        Interact();
     }
 
     protected override void OnInteract()
     {
         if (isOpen || isAnimating) return;
 
-        if (!InteractionRange.IsActiveCharacterInRange(transform.position, interactionRange))
+        if (!InteractionRange.IsActiveCharacterInRange(transform.position, rangeCollider, interactionRange))
         {
             Debug.Log($"{gameObject.name}: Predaleko si od vrata - pridji blize.");
             return;
